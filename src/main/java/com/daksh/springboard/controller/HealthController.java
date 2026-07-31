@@ -11,6 +11,7 @@ public class HealthController {
 
     public HealthController(ClipService clipService){
         this.clipService=clipService;
+        System.out.println("HealthController created");
     }
 
 
