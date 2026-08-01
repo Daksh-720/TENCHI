@@ -1,6 +1,8 @@
 package com.daksh.springboard.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.model.Clip;
 import java.util.*;
@@ -16,4 +18,12 @@ public class ClipService {
         clips.add(clip);
     
     }
+
+    @GetMapping("/clips")
+    public List<Clip> getAllClips(){
+    return clips;
+
+  }
+
 }
+
