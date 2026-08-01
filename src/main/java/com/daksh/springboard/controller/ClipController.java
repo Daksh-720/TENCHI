@@ -1,9 +1,11 @@
 package com.daksh.springboard.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.daksh.springboard.dto.CreateClipResponse;
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.service.ClipService;
 
@@ -17,7 +19,13 @@ public class ClipController {
     }
     
     @PostMapping("/clips")
-    public void createClip(@RequestBody CreateClipRequest request){
+    public ResponseEntity<CreateClipResponse> createClip(@RequestBody CreateClipRequest request){
         clipService.createClip(request);
+
+        CreateClipResponse response = new CreateClipResponse();
+        response.setMessage("Clip created Successfully");
+
+        return ResponseEntity.status(201).body(response);
+        
     }
 }
