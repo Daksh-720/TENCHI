@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.daksh.springboard.dto.CreateClipResponse;
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.service.ClipService;
-import com.daksh.springboard.model.Clip;
 import com.daksh.springboard.dto.GetClipResponse;
 import java.util.*;
 
