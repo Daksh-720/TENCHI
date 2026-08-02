@@ -11,9 +11,14 @@ import java.util.*;
 public class ClipService {
 
     private final List<Clip> clips = new ArrayList<>();
+    private Long nextId=1L;
 
     public void createClip(CreateClipRequest request){
         Clip clip = new Clip();
+        clip.setId(nextId);
+        
+        nextId++;
+
         clip.setContent(request.getContent());
         clips.add(clip);
     
