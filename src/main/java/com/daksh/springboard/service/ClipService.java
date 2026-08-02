@@ -1,6 +1,8 @@
 package com.daksh.springboard.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.GetClipResponse;
@@ -49,7 +51,7 @@ public class ClipService {
 
     }
     
-    throw new RuntimeException("Clip not Found!");
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Clip Not Found!");
   }
 
 }
