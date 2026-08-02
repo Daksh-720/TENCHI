@@ -1,5 +1,8 @@
 package com.daksh.springboard.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"id", "content"})
 public class GetClipResponse {
     
     private Long id;
@@ -11,7 +14,7 @@ public class GetClipResponse {
     public void setId(Long id){
         this.id = id;
     }
-    
+
     public String getContent(){
         return content;
     }

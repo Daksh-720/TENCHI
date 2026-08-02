@@ -2,6 +2,7 @@ package com.daksh.springboard.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +10,7 @@ import com.daksh.springboard.dto.CreateClipResponse;
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.service.ClipService;
 import com.daksh.springboard.dto.GetClipResponse;
-import java.util.*;
+// import java.util.*;
 
 
 @RestController
@@ -31,8 +32,8 @@ public class ClipController {
         
     }
 
-    @GetMapping("/clips")
-    public ResponseEntity<List<GetClipResponse>> getAllClips(){
-        return ResponseEntity.ok(clipService.getAllClips());
+    @GetMapping("/clips/{id}")
+    public ResponseEntity<GetClipResponse> getClipById(@PathVariable Long id){
+        return ResponseEntity.ok(clipService.getClipById(id));
     }
 }

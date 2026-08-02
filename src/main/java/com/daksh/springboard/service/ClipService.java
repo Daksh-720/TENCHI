@@ -7,6 +7,7 @@ import com.daksh.springboard.dto.GetClipResponse;
 import com.daksh.springboard.model.Clip;
 import java.util.*;
 
+
 @Service
 public class ClipService {
 
@@ -16,7 +17,7 @@ public class ClipService {
     public void createClip(CreateClipRequest request){
         Clip clip = new Clip();
         clip.setId(nextId);
-        
+
         nextId++;
 
         clip.setContent(request.getContent());
@@ -29,11 +30,26 @@ public class ClipService {
 
     for(Clip clip : clips){
         GetClipResponse response = new GetClipResponse();
+        response.setId(clip.getId());
         response.setContent(clip.getContent());
         responses.add(response);
     }
 
     return responses;
+  }
+
+  public GetClipResponse getClipById(Long id){
+    for(Clip clip : clips){
+        if(clip.getId().equals(id)){
+            GetClipResponse response = new GetClipResponse();
+            response.setId(clip.getId());
+            response.setContent(clip.getContent());
+            return response;
+        }
+
+    }
+    
+    throw new RuntimeException("Clip not Found!");
   }
 
 }
