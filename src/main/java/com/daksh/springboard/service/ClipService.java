@@ -6,6 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.GetClipResponse;
+import com.daksh.springboard.dto.UpdateClipRequest;
 import com.daksh.springboard.model.Clip;
 import java.util.*;
 
@@ -16,7 +17,7 @@ public class ClipService {
     private final List<Clip> clips = new ArrayList<>();
     private Long nextId=1L;
 
-    public void createClip(CreateClipRequest request){
+    public Clip createClip(CreateClipRequest request){
         Clip clip = new Clip();
         clip.setId(nextId);
 
@@ -24,7 +25,8 @@ public class ClipService {
 
         clip.setContent(request.getContent());
         clips.add(clip);
-    
+
+        return clip;    
     }
 
     public List<GetClipResponse> getAllClips(){
@@ -36,9 +38,9 @@ public class ClipService {
         response.setContent(clip.getContent());
         responses.add(response);
     }
-
     return responses;
   }
+
 
   public GetClipResponse getClipById(Long id){
     for(Clip clip : clips){
@@ -48,9 +50,22 @@ public class ClipService {
             response.setContent(clip.getContent());
             return response;
         }
-
     }
-    
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Clip Not Found!");
+  }
+
+
+  public GetClipResponse updateClip(Long id, UpdateClipRequest request){
+
+    for(Clip clip : clips){
+        if(clip.getId().equals(id)){
+            clip.setContent(request.getContent());
+            GetClipResponse response = new GetClipResponse();
+            response.setId(clip.getId());
+            response.setContent(clip.getContent());
+            return response;
+        }
+    }
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Clip Not Found!");
   }
 
