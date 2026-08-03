@@ -46,8 +46,13 @@ public class ClipController {
 
     @PutMapping("/clips/{id}")
     public ResponseEntity<GetClipResponse> updateClip(@PathVariable Long id, @RequestBody UpdateClipRequest request){
-        return ResponseEntity.ok(clipService.updateClip(id, request));
+        Clip clip = clipService.updateClip(id, request);
+        GetClipResponse response = new GetClipResponse();
+        response.setId(clip.getId());
+        response.setContent(clip.getContent());
+        return ResponseEntity.ok(response);
     }
+
 
     @DeleteMapping("/clips/{id}")
     public ResponseEntity<String> deleteClip(@PathVariable Long id){
