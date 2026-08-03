@@ -27,7 +27,6 @@ public class ClipController {
     public ResponseEntity<CreateClipResponse> createClip(@RequestBody CreateClipRequest request){
         Clip clip = clipService.createClip(request);
         CreateClipResponse response = new CreateClipResponse();
-
         response.setId(clip.getId());
         response.setMessage("Clip created Successfully");
         return ResponseEntity.status(201).body(response);
@@ -37,20 +36,14 @@ public class ClipController {
     @GetMapping("/clips/{id}")
     public ResponseEntity<GetClipResponse> getClipById(@PathVariable Long id){
         Clip clip = clipService.getClipById(id);
-        GetClipResponse response = new GetClipResponse();
-        response.setId(clip.getId());
-        response.setContent(clip.getContent());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(mapToGetClipResponse(clip));
     }
 
 
     @PutMapping("/clips/{id}")
     public ResponseEntity<GetClipResponse> updateClip(@PathVariable Long id, @RequestBody UpdateClipRequest request){
         Clip clip = clipService.updateClip(id, request);
-        GetClipResponse response = new GetClipResponse();
-        response.setId(clip.getId());
-        response.setContent(clip.getContent());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(mapToGetClipResponse(clip));
     }
 
 
@@ -58,6 +51,14 @@ public class ClipController {
     public ResponseEntity<String> deleteClip(@PathVariable Long id){
         clipService.deleteClip(id);
         return ResponseEntity.ok("Clip deleted Successfully!!");
+    }
+
+
+    private GetClipResponse mapToGetClipResponse(Clip clip){
+        GetClipResponse response = new GetClipResponse();
+        response.setId(clip.getId());
+        response.setContent(clip.getContent());
+        return response;
     }
 
 }
