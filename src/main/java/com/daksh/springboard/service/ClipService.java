@@ -42,13 +42,10 @@ public class ClipService {
   }
 
 
-  public GetClipResponse getClipById(Long id){
+  public Clip getClipById(Long id){
     for(Clip clip : clips){
         if(clip.getId().equals(id)){
-            GetClipResponse response = new GetClipResponse();
-            response.setId(clip.getId());
-            response.setContent(clip.getContent());
-            return response;
+           return clip;
         }
     }
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Clip Not Found!");
@@ -67,6 +64,12 @@ public class ClipService {
         }
     }
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Clip Not Found!");
+  }
+
+
+  public void deleteClip(Long id){
+    Clip clip = getClipById(id);
+    clips.remove(clip);
   }
 
 }
