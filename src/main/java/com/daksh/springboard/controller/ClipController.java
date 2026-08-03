@@ -35,7 +35,11 @@ public class ClipController {
 
     @GetMapping("/clips/{id}")
     public ResponseEntity<GetClipResponse> getClipById(@PathVariable Long id){
-        return ResponseEntity.ok(clipService.getClipById(id));
+        Clip clip = clipService.getClipById(id);
+        GetClipResponse response = new GetClipResponse();
+        response.setId(clip.getId());
+        response.setContent(clip.getContent());
+        return ResponseEntity.ok(response);
     }
 
 
