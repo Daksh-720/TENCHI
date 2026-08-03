@@ -20,12 +20,9 @@ public class ClipService {
     public Clip createClip(CreateClipRequest request){
         Clip clip = new Clip();
         clip.setId(nextId);
-
         nextId++;
-
         clip.setContent(request.getContent());
         clips.add(clip);
-
         return clip;    
     }
 
@@ -52,15 +49,11 @@ public class ClipService {
   }
 
 
-  public GetClipResponse updateClip(Long id, UpdateClipRequest request){
-
+  public Clip updateClip(Long id, UpdateClipRequest request){
     for(Clip clip : clips){
         if(clip.getId().equals(id)){
             clip.setContent(request.getContent());
-            GetClipResponse response = new GetClipResponse();
-            response.setId(clip.getId());
-            response.setContent(clip.getContent());
-            return response;
+            return clip;
         }
     }
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Clip Not Found!");
