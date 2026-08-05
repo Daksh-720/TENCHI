@@ -1,5 +1,6 @@
 package com.daksh.springboard.controller;
 
+// import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.daksh.springboard.dto.*;
 import com.daksh.springboard.service.ClipService;
-// import java.util.*;
+import java.util.*;
 import com.daksh.springboard.model.Clip;
 
 
@@ -31,6 +32,14 @@ public class ClipController {
         response.setMessage("Clip created Successfully");
         return ResponseEntity.status(201).body(response);
         
+    }
+
+    public ResponseEntity<List<GetClipResponse>> getAllClips(){
+        List<GetClipResponse> responses = new ArrayList<>();
+        for(Clip clip : clipService.getAllClips()){
+            responses.add(mapToGetClipResponse(clip));
+        }
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/clips/{id}")
