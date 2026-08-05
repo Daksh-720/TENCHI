@@ -8,28 +8,31 @@ import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.GetClipResponse;
 import com.daksh.springboard.dto.UpdateClipRequest;
 import com.daksh.springboard.model.Clip;
+import com.daksh.springboard.repository.ClipRepository;
+
 import java.util.*;
 
 
 @Service
 public class ClipService {
 
-    private final List<Clip> clips = new ArrayList<>();
-    private Long nextId=1L;
+    private final ClipRepository clipRepository;
+    
+    public ClipService(ClipRepository clipRepository){
+      this.clipRepository = clipRepository;
+    }
+
 
     public Clip createClip(CreateClipRequest request){
         Clip clip = new Clip();
-        clip.setId(nextId);
-        nextId++;
         clip.setContent(request.getContent());
-        clips.add(clip);
-        return clip;    
+        return clipRepository.save(clip);
     }
 
     public List<GetClipResponse> getAllClips(){
     List<GetClipResponse> responses = new ArrayList<>();
 
-    for(Clip clip : clips){
+    for(Clip clip : clipRepository.findAll()){
         GetClipResponse response = new GetClipResponse();
         response.setId(clip.getId());
         response.setContent(clip.getContent());
@@ -40,29 +43,22 @@ public class ClipService {
 
 
   public Clip getClipById(Long id){
-    for(Clip clip : clips){
-        if(clip.getId().equals(id)){
-           return clip;
-        }
+    return clipRepository.findById(id)
+                         .orElseThrow(()->new ResponseStatusException
+                         (HttpStatus.NOT_FOUND, "Clip not found"));
     }
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Clip Not Found!");
-  }
+  
 
 
   public Clip updateClip(Long id, UpdateClipRequest request){
-    for(Clip clip : clips){
-        if(clip.getId().equals(id)){
-            clip.setContent(request.getContent());
-            return clip;
-        }
+     Clip clip = getClipById(id);
+     clip.setContent(request.getContent());
+     return clipRepository.save(clip);
     }
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Clip Not Found!");
-  }
 
 
   public void deleteClip(Long id){
-    Clip clip = getClipById(id);
-    clips.remove(clip);
+    clipRepository.deleteById(getClipById(id).getId());
   }
 
 }
