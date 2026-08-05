@@ -7,8 +7,10 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Clip {
+    
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+
     private Long id;
     private String content;
 
