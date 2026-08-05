@@ -5,11 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.daksh.springboard.dto.CreateClipRequest;
-import com.daksh.springboard.dto.GetClipResponse;
+// import com.daksh.springboard.dto.GetClipResponse;
 import com.daksh.springboard.dto.UpdateClipRequest;
 import com.daksh.springboard.model.Clip;
 import com.daksh.springboard.repository.ClipRepository;
-
 import java.util.*;
 
 
