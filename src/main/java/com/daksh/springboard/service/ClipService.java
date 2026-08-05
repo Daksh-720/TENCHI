@@ -29,16 +29,8 @@ public class ClipService {
         return clipRepository.save(clip);
     }
 
-    public List<GetClipResponse> getAllClips(){
-    List<GetClipResponse> responses = new ArrayList<>();
-
-    for(Clip clip : clipRepository.findAll()){
-        GetClipResponse response = new GetClipResponse();
-        response.setId(clip.getId());
-        response.setContent(clip.getContent());
-        responses.add(response);
-    }
-    return responses;
+    public List<Clip> getAllClips(){
+    return clipRepository.findAll();
   }
 
 
@@ -62,4 +54,3 @@ public class ClipService {
   }
 
 }
-
