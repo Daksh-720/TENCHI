@@ -34,6 +34,7 @@ public class ClipController {
         
     }
 
+    @GetMapping("/clips")
     public ResponseEntity<List<GetClipResponse>> getAllClips(){
         List<GetClipResponse> responses = new ArrayList<>();
         for(Clip clip : clipService.getAllClips()){
