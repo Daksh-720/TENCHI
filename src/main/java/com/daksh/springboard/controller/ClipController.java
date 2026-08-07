@@ -27,11 +27,12 @@ public class ClipController {
     @PostMapping("/clips")
     public ResponseEntity<CreateClipResponse> createClip(@RequestBody CreateClipRequest request){
         Clip clip = clipService.createClip(request);
-        CreateClipResponse response = new CreateClipResponse();
-        response.setId(clip.getId());
-        response.setMessage("Clip created Successfully");
+        CreateClipResponse response = new CreateClipResponse(
+            clip.getId(),
+            clip.getShareCode(),
+            "Clip Created Successfully!!"
+        );
         return ResponseEntity.status(201).body(response);
-        
     }
 
     @GetMapping("/clips")
