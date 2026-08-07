@@ -58,4 +58,9 @@ public class ClipService {
     clipRepository.deleteById(getClipById(id).getId());
   }
 
+  public Clip getClipByShareCode(String shareCode){
+    return clipRepository.findByShareCode(shareCode)
+    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Data NOT FOUND!!"));
+  }
+
 }
