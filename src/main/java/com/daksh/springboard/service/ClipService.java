@@ -30,7 +30,11 @@ public class ClipService {
     public Clip createClip(CreateClipRequest request){
         Clip clip = new Clip();
         clip.setContent(request.getContent());
-        clip.setShareCode(codeGenerator.generate());
+        String shareCode;
+        do{
+          shareCode = codeGenerator.generate();
+        }while(clipRepository.findByShareCode(shareCode).isPresent());
+        clip.setShareCode(shareCode);
         return clipRepository.save(clip);
     }
 
