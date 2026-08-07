@@ -1,7 +1,10 @@
 package com.daksh.springboard.util;
 
 import java.security.SecureRandom;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class CodeGenerator {
 
     private static final String CHARACTERS = "abcxyz0123456789";

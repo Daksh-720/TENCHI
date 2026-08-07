@@ -9,6 +9,8 @@ import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.UpdateClipRequest;
 import com.daksh.springboard.model.Clip;
 import com.daksh.springboard.repository.ClipRepository;
+import com.daksh.springboard.util.CodeGenerator;
+
 import java.util.*;
 
 
@@ -16,15 +18,19 @@ import java.util.*;
 public class ClipService {
 
     private final ClipRepository clipRepository;
+    private final CodeGenerator codeGenerator;
     
-    public ClipService(ClipRepository clipRepository){
+    
+    public ClipService(ClipRepository clipRepository, CodeGenerator codeGenerator){
       this.clipRepository = clipRepository;
+      this.codeGenerator = codeGenerator;
     }
 
 
     public Clip createClip(CreateClipRequest request){
         Clip clip = new Clip();
         clip.setContent(request.getContent());
+        clip.setShareCode(codeGenerator.generate());
         return clipRepository.save(clip);
     }
 

@@ -12,6 +12,7 @@ public class Clip {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 
     private Long id;
+    private String shareCode;
     private String content;
 
     public Long getId(){
@@ -26,5 +27,12 @@ public class Clip {
     }
     public void setContent(String content){
         this.content = content;
+    }
+
+    public String getShareCode(){
+        return shareCode;
+    }
+    public void setShareCode(String shareCode){
+        this.shareCode = shareCode;
     }
 }
