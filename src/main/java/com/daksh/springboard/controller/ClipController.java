@@ -43,9 +43,9 @@ public class ClipController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/clips/{id}")
-    public ResponseEntity<GetClipResponse> getClipById(@PathVariable Long id){
-        Clip clip = clipService.getClipById(id);
+    @GetMapping("/clips/{shareCode}")
+    public ResponseEntity<GetClipResponse> getClipByShareCode(@PathVariable String shareCode){
+        Clip clip = clipService.getClipByShareCode(shareCode);
         return ResponseEntity.ok(mapToGetClipResponse(clip));
     }
 
@@ -67,6 +67,7 @@ public class ClipController {
     private GetClipResponse mapToGetClipResponse(Clip clip){
         GetClipResponse response = new GetClipResponse();
         response.setId(clip.getId());
+        response.setShareCode(clip.getShareCode());
         response.setContent(clip.getContent());
         return response;
     }
