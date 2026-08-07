@@ -11,6 +11,7 @@ import com.daksh.springboard.model.Clip;
 import com.daksh.springboard.repository.ClipRepository;
 import com.daksh.springboard.util.CodeGenerator;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -30,6 +31,9 @@ public class ClipService {
     public Clip createClip(CreateClipRequest request){
         Clip clip = new Clip();
         clip.setContent(request.getContent());
+        LocalDateTime createdAt = LocalDateTime.now();
+        clip.setCreatedAt(createdAt);
+        clip.setExpiresAt(createdAt.plusMinutes(15));
         String shareCode;
         do{
           shareCode = codeGenerator.generate();
@@ -63,8 +67,15 @@ public class ClipService {
   }
 
   public Clip getClipByShareCode(String shareCode){
-    return clipRepository.findByShareCode(shareCode)
+    Clip clip = clipRepository.findByShareCode(shareCode)
     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Data NOT FOUND!!"));
+
+    if(clip.getExpiresAt().isBefore(LocalDateTime.now())) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "CLIP HAS EXPIRED!!");
+    }
+
+    return clip;
   }
+  
 
 }

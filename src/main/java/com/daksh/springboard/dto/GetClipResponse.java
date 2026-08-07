@@ -1,5 +1,7 @@
 package com.daksh.springboard.dto;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({"id", "content"})
@@ -8,6 +10,8 @@ public class GetClipResponse {
     private Long id;
     private String content;
     private String shareCode;
+    private LocalDateTime createdAt;
+    private LocalDateTime expiresAt;
 
     public Long getId(){
         return id;
@@ -28,5 +32,19 @@ public class GetClipResponse {
     }
     public void setShareCode(String shareCode){
         this.shareCode = shareCode;
+    }
+
+     public LocalDateTime getCreatedAt(){
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt){
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getExpiresAt(){
+        return expiresAt;
+    }
+    public void setExpiresAt(LocalDateTime expiresAt){
+        this.expiresAt = expiresAt;
     }
 }

@@ -70,6 +70,8 @@ public class ClipController {
         response.setId(clip.getId());
         response.setShareCode(clip.getShareCode());
         response.setContent(clip.getContent());
+        response.setCreatedAt(clip.getCreatedAt());
+        response.setExpiresAt(clip.getExpiresAt());
         return response;
     }
 
