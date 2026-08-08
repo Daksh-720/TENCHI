@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ClipRepository extends JpaRepository<Clip, Long>{
     Optional<Clip> findByShareCode(String shareCode);
     void deleteByExpiresAtBefore(LocalDateTime time);
+    
+    List<Clip> findByExpiresAtAfter(LocalDateTime time);
 }

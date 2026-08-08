@@ -41,7 +41,7 @@ public class ClipService {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
         }
         clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
-        
+
         String shareCode;
         do{
           shareCode = codeGenerator.generate();
@@ -51,7 +51,7 @@ public class ClipService {
     }
 
     public List<Clip> getAllClips(){
-    return clipRepository.findAll();
+    return clipRepository.findByExpiresAtAfter(LocalDateTime.now());
   }
 
 
