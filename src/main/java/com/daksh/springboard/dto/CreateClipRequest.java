@@ -12,10 +12,10 @@ public class CreateClipRequest {
         this.content=content;
     }
 
-    public Integer setExpiryMinutes(){
+    public Integer getExpiryMinutes(){
         return expiryMinutes;
     }
-    public void getExpiryMinutes(Integer expiryMinutes){
+    public void setExpiryMinutes(Integer expiryMinutes){
         this.expiryMinutes = expiryMinutes;
     }
 }

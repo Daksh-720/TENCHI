@@ -33,7 +33,15 @@ public class ClipService {
         clip.setContent(request.getContent());
         LocalDateTime createdAt = LocalDateTime.now();
         clip.setCreatedAt(createdAt);
-        clip.setExpiresAt(createdAt.plusMinutes(15));
+        Integer expiryMinutes = request.getExpiryMinutes();
+        if(expiryMinutes == null){
+          expiryMinutes = 15;
+        }
+        if(expiryMinutes < 1 || expiryMinutes > 2880){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
+        }
+        clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
+        
         String shareCode;
         do{
           shareCode = codeGenerator.generate();
