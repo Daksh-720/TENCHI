@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.daksh.springboard.dto.CreateClipRequest;
+import com.daksh.springboard.dto.FileInfo;
 // import com.daksh.springboard.dto.GetClipResponse;
 import com.daksh.springboard.dto.UpdateClipRequest;
 import com.daksh.springboard.model.Clip;
@@ -88,7 +89,7 @@ public class ClipService {
   }
   
 
-  public String saveFile(MultipartFile file){
+  public FileInfo saveFile(MultipartFile file){
     try{
       Path uploadPath = Paths.get("uploads");
       String originalFileName = file.getOriginalFilename();
@@ -102,11 +103,36 @@ public class ClipService {
         Files.createDirectories(uploadPath);
       }
       Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-      Long fileSize = Files.size(filePath);
-      return filePath.toString();
+      long fileSize = Files.size(filePath);
+      return new FileInfo(originalFileName,filePath.toString(),fileSize);
 
     }catch(IOException e){
       throw new RuntimeException("Failed to Create upload Directory", e);
     }
+  }
+
+
+  public Clip createFileClip(MultipartFile file, Integer expiryMinutes){
+    FileInfo fileInfo = saveFile(file);
+    Clip clip = new Clip();
+    clip.setContentType(ContentType.FILE);
+    clip.setFileName(fileInfo.getFileName());
+    clip.setFilePath(fileInfo.getFilePath());
+    clip.setFileSize(fileInfo.getFileSize());
+    LocalDateTime createdAt = LocalDateTime.now();
+    clip.setCreatedAt(createdAt);
+    if(expiryMinutes == null){
+      expiryMinutes = 15;
+    }
+    if(expiryMinutes<1 || expiryMinutes>2880){
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
+    }
+    clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
+    String shareCode;
+    do{
+      shareCode = codeGenerator.generate();
+    }while(clipRepository.findByShareCode(shareCode).isPresent());
+    clip.setShareCode(shareCode);
+    return clipRepository.save(clip);
   }
 }
