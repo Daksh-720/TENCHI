@@ -3,16 +3,18 @@ package com.daksh.springboard.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.daksh.springboard.dto.CreateClipRequest;
 // import com.daksh.springboard.dto.GetClipResponse;
 import com.daksh.springboard.dto.UpdateClipRequest;
 import com.daksh.springboard.model.Clip;
+import com.daksh.springboard.model.ContentType;
 import com.daksh.springboard.repository.ClipRepository;
 import com.daksh.springboard.util.CodeGenerator;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.nio.file.*;
 
 
 @Service
@@ -31,6 +33,8 @@ public class ClipService {
     public Clip createClip(CreateClipRequest request){
         Clip clip = new Clip();
         clip.setContent(request.getContent());
+        clip.setContentType(ContentType.TEXT);
+        
         LocalDateTime createdAt = LocalDateTime.now();
         clip.setCreatedAt(createdAt);
         Integer expiryMinutes = request.getExpiryMinutes();
@@ -77,13 +81,30 @@ public class ClipService {
   public Clip getClipByShareCode(String shareCode){
     Clip clip = clipRepository.findByShareCode(shareCode)
     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Data NOT FOUND!!"));
-
     if(clip.getExpiresAt().isBefore(LocalDateTime.now())) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "CLIP HAS EXPIRED!!");
     }
-
     return clip;
   }
   
 
+  public String saveFile(MultipartFile file){
+    try{
+      Path uploadPath = Paths.get("uploads");
+      String originalFileName = file.getOriginalFilename();
+      String extension = "";
+      if(originalFileName != null && originalFileName.contains(".")){
+        extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+      }
+      String storedFileName = UUID.randomUUID() + extension;
+      Path filePath = uploadPath.resolve(storedFileName);
+      Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+      if(!Files.exists(uploadPath)){
+        Files.createDirectories(uploadPath);
+      }
+      return uploadPath.toString();
+    }catch(IOException e){
+      throw new RuntimeException("Failed to Create upload Directory", e);
+    }
+  }
 }

@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import com.daksh.springboard.dto.*;
 import com.daksh.springboard.service.ClipService;
 import java.util.*;
@@ -73,6 +75,12 @@ public class ClipController {
         response.setCreatedAt(clip.getCreatedAt());
         response.setExpiresAt(clip.getExpiresAt());
         return response;
+    }
+
+
+    @PostMapping("/file")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file){
+        return ResponseEntity.ok("File received: " + file.getOriginalFilename());
     }
 
 }
