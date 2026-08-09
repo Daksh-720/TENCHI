@@ -98,11 +98,13 @@ public class ClipService {
       }
       String storedFileName = UUID.randomUUID() + extension;
       Path filePath = uploadPath.resolve(storedFileName);
-      Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
       if(!Files.exists(uploadPath)){
         Files.createDirectories(uploadPath);
       }
-      return uploadPath.toString();
+      Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+      Long fileSize = Files.size(filePath);
+      return filePath.toString();
+
     }catch(IOException e){
       throw new RuntimeException("Failed to Create upload Directory", e);
     }
