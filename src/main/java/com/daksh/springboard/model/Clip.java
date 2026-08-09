@@ -3,6 +3,8 @@ package com.daksh.springboard.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
@@ -15,8 +17,13 @@ public class Clip {
     private Long id;
     private String shareCode;
     private String content;
+    @Enumerated(EnumType.STRING)
+    private ContentType contentType;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
+    private String fileName;
+    private String filePath;
+    private Long fileSize;
 
     public Long getId(){
         return id;
@@ -52,5 +59,33 @@ public class Clip {
     }
     public void setExpiresAt(LocalDateTime expiresAt){
         this.expiresAt = expiresAt;
+    }
+
+    public ContentType getContentType(){
+        return contentType;
+    }
+    public void setContentType(ContentType contentType){
+        this.contentType = contentType;
+    }
+
+    public String getFileName(){
+        return fileName;
+    }
+    public void setFileName(String fileName){
+        this.fileName = fileName;
+    }
+
+    public String getFilePath(){
+        return filePath;
+    }
+    public void setFilePath(String filePath){
+        this.filePath = filePath;
+    }
+
+    public Long getFileSize(){
+        return fileSize;
+    }
+    public void setFileSize(Long fileSize){
+        this.fileSize = fileSize;
     }
 }
