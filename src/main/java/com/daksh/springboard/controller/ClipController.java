@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.CreateClipResponse;
-import com.daksh.springboard.dto.FileInfo;
+// import com.daksh.springboard.dto.FileInfo;
 import com.daksh.springboard.dto.GetClipResponse;
 import com.daksh.springboard.dto.UpdateClipRequest;
 import com.daksh.springboard.service.ClipService;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import java.util.*;
 import com.daksh.springboard.model.Clip;
 
@@ -78,14 +80,27 @@ public class ClipController {
         response.setContent(clip.getContent());
         response.setCreatedAt(clip.getCreatedAt());
         response.setExpiresAt(clip.getExpiresAt());
+        response.setFileName(clip.getFileName());
+        response.setFilePath(clip.getFilePath());
+        response.setFileSize(clip.getFileSize());
         return response;
     }
 
 
     @PostMapping("/file")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file){
-        FileInfo fileInfo = clipService.saveFile(file);
-        return ResponseEntity.ok("File Saved :" + fileInfo.getFilePath());
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(required = false)Integer expiryMinutes){
+        Clip clip = clipService.createFileClip(file, expiryMinutes);
+        return ResponseEntity.ok("File Saved :" + clip.getFilePath());
+    }
+
+
+    @GetMapping("/clips/{shareCode}/download")
+    public ResponseEntity<Resource> download(@PathVariable String shareCode){
+        Clip clip = clipService.getClipByShareCode(shareCode);
+        Resource resource = clipService.getFile(clip);
+        return ResponseEntity.ok()
+                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + clip.getFileName() + "\"")
+                             .body(resource);
     }
 
 }
