@@ -78,6 +78,7 @@ public class ClipController {
         response.setId(clip.getId());
         response.setShareCode(clip.getShareCode());
         response.setContent(clip.getContent());
+        response.setContentType(clip.getContentType());
         response.setCreatedAt(clip.getCreatedAt());
         response.setExpiresAt(clip.getExpiresAt());
         response.setFileName(clip.getFileName());

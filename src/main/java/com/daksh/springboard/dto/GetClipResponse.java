@@ -1,7 +1,7 @@
 package com.daksh.springboard.dto;
 
 import java.time.LocalDateTime;
-
+import com.daksh.springboard.model.ContentType;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({"id", "content"})
@@ -15,6 +15,7 @@ public class GetClipResponse {
     private String fileName;
     private String filePath;
     private Long fileSize;
+    private ContentType contentType;
 
     public Long getId(){
         return id;
@@ -70,5 +71,12 @@ public class GetClipResponse {
     }
     public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public ContentType getContentType(){
+        return contentType;
+    }
+    public void setContentType(ContentType contentType){
+        this.contentType = contentType;
     }
 }
