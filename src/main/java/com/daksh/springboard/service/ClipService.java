@@ -12,6 +12,8 @@ import com.daksh.springboard.model.ContentType;
 import com.daksh.springboard.repository.ClipRepository;
 import com.daksh.springboard.util.CodeGenerator;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -86,6 +88,12 @@ public class ClipService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "CLIP HAS EXPIRED!!");
     }
     return clip;
+  }
+
+
+  public Resource getFile(Clip clip){
+    Path filePath = Paths.get(clip.getFilePath());
+    return new FileSystemResource(filePath);
   }
   
 

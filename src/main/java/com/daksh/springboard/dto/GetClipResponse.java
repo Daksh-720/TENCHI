@@ -12,6 +12,9 @@ public class GetClipResponse {
     private String shareCode;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
+    private String fileName;
+    private String filePath;
+    private Long fileSize;
 
     public Long getId(){
         return id;
@@ -46,5 +49,26 @@ public class GetClipResponse {
     }
     public void setExpiresAt(LocalDateTime expiresAt){
         this.expiresAt = expiresAt;
+    }
+
+    public String getFileName(){
+        return fileName;
+    }
+    public void setFileName(String fileName){
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+    public void setFilePath(String filePath) {
+       this.filePath = filePath;
+    }
+
+    public Long getFileSize() {
+        return fileSize;
+    }
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
     }
 }
