@@ -152,4 +152,34 @@ public class ClipService {
     clip.setShareCode(shareCode);
     return clipRepository.save(clip);
   }
+
+
+  public Clip createMultipleFileClip(MultipartFile[] files, Integer expiryMinutes){
+    Clip clip = new Clip();
+    clip.setContentType(ContentType.FILE);
+    LocalDateTime createdAt = LocalDateTime.now();
+    clip.setCreatedAt(createdAt);
+    if(expiryMinutes == null){
+      expiryMinutes = 15;
+    }
+    if(expiryMinutes<1 || expiryMinutes>2880){
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
+    }
+    clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
+    String shareCode;
+    do {
+      shareCode = codeGenerator.generate();
+    }while(clipRepository.findByShareCode(shareCode).isPresent());
+    clip.setShareCode(shareCode);
+    for(MultipartFile file : files){
+      FileInfo fileInfo = saveFile(file);
+      clipFile clipFile = new clipFile();
+      clipFile.setFileName(fileInfo.getFileName());
+      clipFile.setFilePath(fileInfo.getFilePath());
+      clipFile.setFileSize(fileInfo.getFileSize());
+      clipFile.setClip(clip);
+      clip.getFiles().add(clipFile);
+    }
+    return clipRepository.save(clip);
+  }
 }
