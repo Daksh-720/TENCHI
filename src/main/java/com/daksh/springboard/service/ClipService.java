@@ -9,6 +9,7 @@ import com.daksh.springboard.dto.FileInfo;
 import com.daksh.springboard.dto.UpdateClipRequest;
 import com.daksh.springboard.model.Clip;
 import com.daksh.springboard.model.ContentType;
+import com.daksh.springboard.model.clipFile;
 import com.daksh.springboard.repository.ClipRepository;
 import com.daksh.springboard.util.CodeGenerator;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,7 @@ public class ClipService {
 
     private final ClipRepository clipRepository;
     private final CodeGenerator codeGenerator;
+    
     
     
     public ClipService(ClipRepository clipRepository, CodeGenerator codeGenerator){
@@ -92,7 +94,11 @@ public class ClipService {
 
 
   public Resource getFile(Clip clip){
-    Path filePath = Paths.get(clip.getFilePath());
+    if(clip.getFiles().isEmpty()){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File Not Found");
+    }
+    clipFile file = clip.getFiles().get(0);
+    Path filePath = Paths.get(file.getFilePath());
     return new FileSystemResource(filePath);
   }
   
@@ -123,10 +129,13 @@ public class ClipService {
   public Clip createFileClip(MultipartFile file, Integer expiryMinutes){
     FileInfo fileInfo = saveFile(file);
     Clip clip = new Clip();
+    clipFile clipFile = new clipFile();
     clip.setContentType(ContentType.FILE);
-    clip.setFileName(fileInfo.getFileName());
-    clip.setFilePath(fileInfo.getFilePath());
-    clip.setFileSize(fileInfo.getFileSize());
+    clipFile.setFileName(fileInfo.getFileName());
+    clipFile.setFilePath(fileInfo.getFilePath());
+    clipFile.setFileSize(fileInfo.getFileSize());
+    clipFile.setClip(clip);
+    clip.getFiles().add(clipFile);
     LocalDateTime createdAt = LocalDateTime.now();
     clip.setCreatedAt(createdAt);
     if(expiryMinutes == null){
