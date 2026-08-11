@@ -7,6 +7,11 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+// import com.daksh.springboard.model.clipFile;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Clip {
@@ -24,6 +29,9 @@ public class Clip {
     private String fileName;
     private String filePath;
     private Long fileSize;
+
+    @OneToMany(mappedBy = "clip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<clipFile> files = new ArrayList<>();
 
     public Long getId(){
         return id;
@@ -87,5 +95,12 @@ public class Clip {
     }
     public void setFileSize(Long fileSize){
         this.fileSize = fileSize;
+    }
+
+    public List<clipFile> getFiles(){
+        return files;
+    }
+    public void setFiles(List<clipFile> files){
+        this.files = files;
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import java.util.*;
 import com.daksh.springboard.model.Clip;
+import com.daksh.springboard.model.clipFile;
 
 
 @RestController
@@ -81,9 +82,13 @@ public class ClipController {
         response.setContentType(clip.getContentType());
         response.setCreatedAt(clip.getCreatedAt());
         response.setExpiresAt(clip.getExpiresAt());
-        response.setFileName(clip.getFileName());
-        response.setFilePath(clip.getFilePath());
-        response.setFileSize(clip.getFileSize());
+
+        if(!clip.getFiles().isEmpty()){
+            clipFile file = clip.getFiles().get(0);
+            response.setFileName(file.getFileName());
+            response.setFilePath(file.getFilePath());
+            response.setFileSize(file.getFileSize());
+        }
         return response;
     }
 
@@ -91,7 +96,7 @@ public class ClipController {
     @PostMapping("/file")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(required = false)Integer expiryMinutes){
         Clip clip = clipService.createFileClip(file, expiryMinutes);
-        return ResponseEntity.ok("File Saved :" + clip.getFilePath());
+        return ResponseEntity.ok("File Saved :" + clip.getFiles().get(0).getFilePath());
     }
 
 
