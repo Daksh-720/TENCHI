@@ -100,6 +100,13 @@ public class ClipController {
     }
 
 
+    @PostMapping("/files")
+    public ResponseEntity<String> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files, @RequestParam(required = false) Integer expiryMinutes){
+        Clip clip = clipService.createMultipleFileClip(files, expiryMinutes);
+        return ResponseEntity.ok("Files saved. share code" + clip.getShareCode());
+    }
+
+
     @GetMapping("/clips/{shareCode}/download")
     public ResponseEntity<Resource> download(@PathVariable String shareCode){
         Clip clip = clipService.getClipByShareCode(shareCode);
