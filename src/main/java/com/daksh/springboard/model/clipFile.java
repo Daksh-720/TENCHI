@@ -1,6 +1,8 @@
 package com.daksh.springboard.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +17,8 @@ public class clipFile {
     private String fileName;
     private String filePath;
     private Long fileSize;
+    @Enumerated(EnumType.STRING)
+    private ContentType contentType;
 
     @ManyToOne
     @JoinColumn(name = "clip_id")
@@ -54,4 +58,12 @@ public class clipFile {
     public void setClip(Clip clip){
         this.clip = clip;
     }
+
+    public ContentType getContentType(){
+        return contentType;
+    }
+    public void setContentType(ContentType contentType){
+        this.contentType = contentType;
+    }
+
 }
