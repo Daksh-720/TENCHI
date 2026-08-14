@@ -147,6 +147,7 @@ public class ClipService {
     FileInfo fileInfo = saveFile(file);
     Clip clip = new Clip();
     clipFile clipFile = new clipFile();
+    clipFile.setContentType(getFileContentType(file));
     clip.setContentType(getFileContentType(file));
     clipFile.setFileName(fileInfo.getFileName());
     clipFile.setFilePath(fileInfo.getFilePath());
@@ -194,6 +195,7 @@ public class ClipService {
       clipFile.setFileName(fileInfo.getFileName());
       clipFile.setFilePath(fileInfo.getFilePath());
       clipFile.setFileSize(fileInfo.getFileSize());
+      clipFile.setContentType(getFileContentType(file));
       clipFile.setClip(clip);
       clip.getFiles().add(clipFile);
     }

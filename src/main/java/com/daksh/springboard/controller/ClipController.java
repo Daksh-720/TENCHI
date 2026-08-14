@@ -86,7 +86,7 @@ public class ClipController {
 
        List<FileResponse> files = new ArrayList<>();
        for(clipFile file : clip.getFiles()){
-        FileResponse fileResponse = new FileResponse(file.getId(), file.getFileName(), file.getFileSize());
+        FileResponse fileResponse = new FileResponse(file.getId(), file.getFileName(), file.getFileSize(), file.getContentType());
         files.add(fileResponse);
        }
         response.setFiles(files);
@@ -129,7 +129,7 @@ public class ClipController {
                             .orElseThrow();
                         
         return ResponseEntity.ok()
-                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileNname=\"" + file.getFileName() + "\"")
+                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
                              .body(resource);
     }
 
