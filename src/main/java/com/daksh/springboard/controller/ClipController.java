@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.CreateClipResponse;
+import com.daksh.springboard.dto.FileResponse;
 // import com.daksh.springboard.dto.FileInfo;
 import com.daksh.springboard.dto.GetClipResponse;
 import com.daksh.springboard.dto.UpdateClipRequest;
@@ -83,12 +84,11 @@ public class ClipController {
         response.setCreatedAt(clip.getCreatedAt());
         response.setExpiresAt(clip.getExpiresAt());
 
-        if(!clip.getFiles().isEmpty()){
-            clipFile file = clip.getFiles().get(0);
-            response.setFileName(file.getFileName());
-            response.setFilePath(file.getFilePath());
-            response.setFileSize(file.getFileSize());
-        }
+       List<FileResponse> files = new ArrayList<>();
+       for(clipFile file : clip.getFiles()){
+        FileResponse fileResponse = new FileResponse(file.getId(), file.getFileName(), file.getFileSize());
+        files.add(fileResponse);
+       }
         return response;
     }
 
