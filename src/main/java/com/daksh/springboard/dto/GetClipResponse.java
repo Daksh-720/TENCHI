@@ -1,6 +1,8 @@
 package com.daksh.springboard.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+// import com.daksh.springboard.dto.*;
 import com.daksh.springboard.model.ContentType;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -12,9 +14,10 @@ public class GetClipResponse {
     private String shareCode;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
-    private String fileName;
-    private String filePath;
-    private Long fileSize;
+    // private String fileName;
+    // private String filePath;
+    // private Long fileSize;
+    private List<FileResponse> files;
     private ContentType contentType;
 
     public Long getId(){
@@ -52,25 +55,11 @@ public class GetClipResponse {
         this.expiresAt = expiresAt;
     }
 
-    public String getFileName(){
-        return fileName;
+    public List<FileResponse> getFiles(){
+        return files;
     }
-    public void setFileName(String fileName){
-        this.fileName = fileName;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-    public void setFilePath(String filePath) {
-       this.filePath = filePath;
-    }
-
-    public Long getFileSize() {
-        return fileSize;
-    }
-    public void setFileSize(Long fileSize) {
-        this.fileSize = fileSize;
+    public void setFiles(List<FileResponse> files){
+        this.files = files;
     }
 
     public ContentType getContentType(){
