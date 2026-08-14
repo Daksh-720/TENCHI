@@ -89,6 +89,7 @@ public class ClipController {
         FileResponse fileResponse = new FileResponse(file.getId(), file.getFileName(), file.getFileSize());
         files.add(fileResponse);
        }
+        response.setFiles(files);
         return response;
     }
 
