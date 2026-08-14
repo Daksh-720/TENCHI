@@ -101,6 +101,23 @@ public class ClipService {
     Path filePath = Paths.get(file.getFilePath());
     return new FileSystemResource(filePath);
   }
+
+
+  public Resource getFileById(Clip clip, Long fileId){
+    clipFile file = clip.getFiles()
+                        .stream()
+                        .filter(f -> f.getId().equals(fileId))
+                        .findFirst()
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "FILE NOT FOUND!"));
+
+    
+    Path filePath = Paths.get(file.getFilePath());
+    Resource resource = new FileSystemResource(filePath);
+    if(!resource.exists()){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "FILE NOT FOUND!");
+    }
+    return resource;
+  }
   
 
   public FileInfo saveFile(MultipartFile file){

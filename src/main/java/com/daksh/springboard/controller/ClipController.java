@@ -116,4 +116,20 @@ public class ClipController {
                              .body(resource);
     }
 
+
+    @GetMapping("/clips/{shareCode}/files/{fileId}/download")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String shareCode, @PathVariable Long fileId){
+        Clip clip = clipService.getClipByShareCode(shareCode);
+        Resource resource = clipService.getFileById(clip, fileId);
+        clipFile file = clip.getFiles()
+                            .stream()
+                            .filter(f -> f.getId().equals(fileId))
+                            .findFirst()
+                            .orElseThrow();
+                        
+        return ResponseEntity.ok()
+                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileNname=\"" + file.getFileName() + "\"")
+                             .body(resource);
+    }
+
 }
