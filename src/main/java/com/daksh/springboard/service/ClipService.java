@@ -147,7 +147,7 @@ public class ClipService {
     FileInfo fileInfo = saveFile(file);
     Clip clip = new Clip();
     clipFile clipFile = new clipFile();
-    clip.setContentType(ContentType.FILE);
+    clip.setContentType(getFileContentType(file));
     clipFile.setFileName(fileInfo.getFileName());
     clipFile.setFilePath(fileInfo.getFilePath());
     clipFile.setFileSize(fileInfo.getFileSize());
@@ -198,5 +198,20 @@ public class ClipService {
       clip.getFiles().add(clipFile);
     }
     return clipRepository.save(clip);
+  }
+
+
+  private ContentType getFileContentType(MultipartFile file){
+    String contentType = file.getContentType();
+    if(contentType == null){
+      return ContentType.FILE;
+    }
+    if(contentType.startsWith("image/")){
+      return ContentType.IMAGE;
+    }
+    if(contentType.startsWith("video/")){
+      return ContentType.VIDEO;
+    }
+    return ContentType.FILE;
   }
 }
