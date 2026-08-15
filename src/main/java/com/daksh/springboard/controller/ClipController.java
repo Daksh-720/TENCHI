@@ -11,18 +11,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.CreateClipResponse;
 import com.daksh.springboard.dto.FileResponse;
-// import com.daksh.springboard.dto.FileInfo;
 import com.daksh.springboard.dto.GetClipResponse;
 import com.daksh.springboard.dto.UpdateClipRequest;
+import com.daksh.springboard.model.Clip;
+import com.daksh.springboard.model.clipFile;
 import com.daksh.springboard.service.ClipService;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import java.util.*;
-import com.daksh.springboard.model.Clip;
-import com.daksh.springboard.model.clipFile;
 
 
 @RestController
