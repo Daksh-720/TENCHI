@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.daksh.springboard.entity.User;
 import com.daksh.springboard.exception.DuplicateEmailException;
+import com.daksh.springboard.exception.InvalidCredentialsException;
 import com.daksh.springboard.repository.UserRepository;
 
 @Service
@@ -29,9 +30,9 @@ public class AuthService {
 
 
     public User login(String email, String password){
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Invalid Email or Password!"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new InvalidCredentialsException("Invalid Email or Password!"));
         if(!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid Email or Password!");
+            throw new InvalidCredentialsException("Invalid Email or Password!");
         }
         return user;
     }
