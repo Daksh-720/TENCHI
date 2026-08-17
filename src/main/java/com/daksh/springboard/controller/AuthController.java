@@ -1,12 +1,13 @@
 package com.daksh.springboard.controller;
 
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.daksh.springboard.dto.RegisterRequest;
+import com.daksh.springboard.dto.RegisterResponse;
 import com.daksh.springboard.entity.User;
+import com.daksh.springboard.dto.RegisterRequest;
 import com.daksh.springboard.service.AuthService;
 
 @RestController
@@ -19,7 +20,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest request){
-        return authService.register(request.getUsername(), request.getEmail(), request.getPassword());
+    public RegisterResponse register(@RequestBody RegisterRequest request){
+        User user = authService.register(request.getUsername(), request.getEmail(), request.getPassword());
+        return new RegisterResponse(user.getUsername(), user.getEmail());
     }
 }
