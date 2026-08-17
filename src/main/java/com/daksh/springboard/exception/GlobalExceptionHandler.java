@@ -14,4 +14,10 @@ public class GlobalExceptionHandler {
     public String handleDuplicateEmail(DuplicateEmailException exception){
         return exception.getMessage();
     }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String handleInvalidCredentials(InvalidCredentialsException exception){
+        return exception.getMessage();
+    }
 }
