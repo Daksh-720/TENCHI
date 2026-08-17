@@ -1,18 +1,12 @@
 package com.daksh.springboard.dto;
 
 public class RegisterResponse {
-    private Long id;
     private String username;
     private String email;
 
-    public RegisterResponse(Long id, String username, String email) {
-        this.id = id;
+    public RegisterResponse(String username, String email) {
         this.username = username;
         this.email = email;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getUsername() {
