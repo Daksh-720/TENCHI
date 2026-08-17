@@ -26,4 +26,13 @@ public class AuthService {
         User user = new User(username, email, hashedPassword);
         return userRepository.save(user);
     }
+
+
+    public User login(String email, String password){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Invalid Email or Password!"));
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid Email or Password!");
+        }
+        return user;
+    }
 }
