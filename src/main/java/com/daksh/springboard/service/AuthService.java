@@ -38,4 +38,9 @@ public class AuthService {
         }
         return user;
     }
+
+
+    public String generateToken(String email){
+        return jwtService.generateToken(email);
+    }
 }

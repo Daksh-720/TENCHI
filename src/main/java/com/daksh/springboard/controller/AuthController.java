@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.daksh.springboard.dto.RegisterResponse;
 import com.daksh.springboard.entity.User;
 import com.daksh.springboard.dto.LoginRequest;
+import com.daksh.springboard.dto.LoginResponse;
 import com.daksh.springboard.dto.RegisterRequest;
 import com.daksh.springboard.service.AuthService;
 
@@ -28,8 +29,9 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public RegisterResponse login(@RequestBody LoginRequest request){
+    public LoginResponse login(@RequestBody LoginRequest request){
         User user = authService.login(request.getEmail(), request.getPassword());
-        return new RegisterResponse(user.getUsername(), user.getEmail());
+        String token = authService.generateToken(user.getEmail());
+        return new LoginResponse(user.getUsername(), user.getEmail(), token);
     }
 }
