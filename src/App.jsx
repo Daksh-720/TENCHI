@@ -8,6 +8,7 @@ import Folder from "./functions/Folder";
 import Image from "./functions/Image";
 import Video from "./functions/Video";
 import Filess from "./functions/Filess";
+import SendRet from "./functions/SendRet";
 function App(){
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
@@ -29,7 +30,6 @@ function App(){
       <Image />
       <Video />
      </div>
-
 
     </div>
   );
