@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FileDrop — Anonymous File Sharing</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: #0f1115;
+    color: #e6e8ee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 480px;
+    background: #171a21;
+    border: 1px solid #262b36;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  h1 { font-size: 24px; margin-bottom: 4px; letter-spacing: 0.3px; }
+  p.tagline { color: #8b93a7; font-size: 14px; margin-bottom: 28px; }
+
+  #drop {
+    border: 2px dashed #3a4254;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  #drop.dragover, #drop:hover { border-color: #4f7cff; background: #1b2030; }
+  #drop .icon { font-size: 40px; display: block; margin-bottom: 10px; }
+  #drop p { font-size: 15px; color: #c3c9d6; }
+  #drop p.small { font-size: 12px; color: #8b93a7; margin-top: 6px; }
+
+  #fileInput { display: none; }
+
+  #status { margin-top: 20px; }
+
+  #progressWrap { display: none; margin-top: 20px; }
+  #progressWrap.visible { display: block; }
+  #progressBar {
+    width: 100%;
+    height: 8px;
+    background: #262b36;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  #progressFill {
+    height: 100%;
+    width: 0%;
+    background: #4f7cff;
+    border-radius: 99px;
+    transition: width 0.2s;
+  }
+  #progressText { font-size: 13px; color: #8b93a7; margin-top: 8px; text-align: center; }
+
+  #result { display: none; margin-top: 20px; }
+  #result.visible { display: block; }
+
+  #fileLabel { font-size: 13px; color: #8b93a7; margin-bottom: 8px; }
+
+  .linkbox {
+    display: flex;
+    gap: 8px;
+  }
+  #link {
+    flex: 1;
+    background: #0f1115;
+    border: 1px solid #262b36;
+    color: #c3d0ff;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: Consolas, monospace;
+    word-break: break-all;
+  }
+
+  button {
+    background: #4f7cff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  button:hover { background: #3d68e0; }
+  button.secondary {
+    background: transparent;
+    border: 1px solid #3a4254;
+    color: #c3c9d6;
+  }
+  button.secondary:hover { background: #1b2030; }
+
+  #error {
+    display: none;
+    margin-top: 16px;
+    background: #3a1d24;
+    border: 1px solid #a33;
+    color: #ffb3b3;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  #error.visible { display: block; }
+
+  footer { margin-top: 20px; font-size: 12px; color: #5b6372; text-align: center; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>FileDrop</h1>
+  <p class="tagline">Upload a file and get a link. No account, no tracking.</p>
+
+  <div id="drop">
+    <span class="icon">&#128228;</span>
+    <p>Click to choose a file</p>
+    <p class="small">or drag &amp; drop it here</p>
+  </div>
+  <input type="file" id="fileInput">
+
+  <div id="progressWrap">
+    <div id="progressBar"><div id="progressFill"></div></div>
+    <div id="progressText">Uploading&hellip;</div>
+  </div>
+
+  <div id="status"></div>
+
+  <div id="result">
+    <div id="fileLabel"></div>
+    <div class="linkbox">
+      <input id="link" readonly>
+      <button id="copyBtn">Copy</button>
+    </div>
+    <br>
+    <button id="anotherBtn" class="secondary">Upload another file</button>
+  </div>
+
+  <div id="error"></div>
+</div>
+
+<footer>
+  Files are sent to tmpfiles.org and deleted after 60 minutes.<br>
+  Max file size is 5&nbsp;GB. Do not share sensitive data.
+</footer>
+
+<script>
+  const drop = document.getElementById("drop");
+  const fileInput = document.getElementById("fileInput");
+  const progressWrap = document.getElementById("progressWrap");
+  const progressFill = document.getElementById("progressFill");
+  const progressText = document.getElementById("progressText");
+  const statusEl = document.getElementById("status");
+  const result = document.getElementById("result");
+  const fileLabel = document.getElementById("fileLabel");
+  const linkInput = document.getElementById("link");
+  const copyBtn = document.getElementById("copyBtn");
+  const anotherBtn = document.getElementById("anotherBtn");
+  const errorEl = document.getElementById("error");
+
+  const API = "https://tmpfiles.org/api/v1/upload";
+  const MAX_BYTES = 5 * 1024 * 1024 * 1024;
+
+  drop.addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length) upload(fileInput.files[0]);
+  });
+
+  ["dragenter", "dragover"].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("dragover"); })
+  );
+  ["dragleave", "drop"].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("dragover"); })
+  );
+  drop.addEventListener("drop", e => {
+    const f = e.dataTransfer.files[0];
+    if (f) upload(f);
+  });
+
+  function upload(file) {
+    resetState();
+    if (file.size > MAX_BYTES) {
+      showError("File is too large. Max size is 5 GB.");
+      return;
+    }
+
+    const form = new FormData();
+    form.append("file", file);
+
+    progressWrap.classList.add("visible");
+    progressText.textContent = "Uploading " + file.name + "\u2026";
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", API);
+
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) {
+        const pct = Math.round((e.loaded / e.total) * 100);
+        progressFill.style.width = pct + "%";
+      }
+    };
+
+    xhr.onload = () => {
+      progressWrap.classList.remove("visible");
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          const raw = data.data.url;
+          const link = raw.replace("tmpfiles.org/", "tmpfiles.org/dl/");
+          fileLabel.textContent = file.name + " (" + formatSize(file.size) + ")";
+          linkInput.value = link;
+          result.classList.add("visible");
+        } catch (err) {
+          showError("Unexpected response from server.");
+        }
+      } else {
+        showError("Upload failed (HTTP " + xhr.status + "). Try again.");
+      }
+    };
+
+    xhr.onerror = () => {
+      progressWrap.classList.remove("visible");
+      showError("Network error. Check your connection and try again.");
+    };
+
+    xhr.send(form);
+  }
+
+  copyBtn.addEventListener("click", () => {
+    linkInput.select();
+    document.execCommand("copy");
+    navigator.clipboard && navigator.clipboard.writeText(linkInput.value);
+    copyBtn.textContent = "Copied!";
+    setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+  });
+
+  anotherBtn.addEventListener("click", () => {
+    resetState();
+    fileInput.value = "";
+  });
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    if (bytes < 1024 * 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + " MB";
+    return (bytes / 1024 / 1024 / 1024).toFixed(2) + " GB";
+  }
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.classList.add("visible");
+  }
+
+  function resetState() {
+    errorEl.classList.remove("visible");
+    result.classList.remove("visible");
+    progressWrap.classList.remove("visible");
+    progressFill.style.width = "0%";
+    statusEl.textContent = "";
+  }
+</script>
+</body>
+</html>
