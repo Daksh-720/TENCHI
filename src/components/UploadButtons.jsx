@@ -25,8 +25,8 @@ function UploadButtons(){
         <div className="text-3x1">📝</div>
         Text
         </button>
+        
        </div>
-
     );
 }
 
