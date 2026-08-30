@@ -34,9 +34,9 @@ function App(){
             <div className="mt-1 flex justify-center gap-3">
                 <Text activeMode={activeMode} setActiveMode={setActiveMode} />
                 <Filess activeMode={activeMode} setActiveMode={setActiveMode} files={files} setFiles={setFiles} />
-                <Folder />
-                <Image />
-                <Video />
+                <Folder activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} />
+                <Image activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} />
+                <Video activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} />
             </div>
 
             <ActivePanel activeMode={activeMode} files={files} />

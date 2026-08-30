@@ -1,9 +1,21 @@
-function Video(){
+function Video({ activeMode, setActiveMode, setFiles }){
+    function handleVideoChange(event){
+        setFiles(Array.from(event.target.files));
+        setActiveMode("video");
+    }
+
+
+
     return (
-        <button className="flex h-27 w-27 flex-col items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20">
+        <>
+        <input type="file" id="videoInput" accept="video/*" multiple onChange={handleVideoChange} className="hidden" />
+        <button
+        onClick={() => document.getElementById("videoInput").click()}
+        className="flex h-27 w-27 flex-col items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20">
         <div className="text-3xl">🎥</div>
         Video
         </button>
+        </>
     );
 }
 
