@@ -10,7 +10,7 @@ function ActivePanel({ activeMode, files }) {
             {activeMode === "text" && (
                 <textarea
                  placeholder="Enter Text..."
-                 className="absolute left-1/2 top-38 h-52 w-125 -translate-x-1/2 resize-none rounded-2xl border border-white/20 bg-white/10 p-5 text-white outline-none backdrop-blur-md placeholder:text-white/50 focus:border-white/40"
+                 className="absolute left-1/2 top-34 h-52 w-125 -translate-x-1/2 resize-none rounded-2xl border border-white/20 bg-white/10 p-5 text-white outline-none backdrop-blur-md placeholder:text-white/50 focus:border-white/40"
                 />
             )}
 
