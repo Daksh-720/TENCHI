@@ -1,15 +1,19 @@
+import { useState } from "react";
 import "./App.css";
 import HamBurgerMenu from "./components/HamBurgerMenu";
 import GalaxyBg from './components/GalaxyBg';
 import Theme from "./components/Theme";
-import UploadButtons from "./components/UploadButtons";
 import Text from "./functions/Text";
 import Folder from "./functions/Folder";
 import Image from "./functions/Image";
 import Video from "./functions/Video";
 import Filess from "./functions/Filess";
 import SendRet from "./functions/SendRet";
+import ActivePanel from "./functions/ActivePanel";
+
 function App(){
+  const [activeMode, setActiveMode] = useState("text");
+  const [files, setFiles] = useState([]);
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
       <GalaxyBg />
@@ -23,14 +27,22 @@ function App(){
       </div>
 
 
-     <div className="mt-38 flex justify-center gap-3 ">
-      <Text />
-      <Filess />
-      <Folder />
-      <Image />
-      <Video />
-     </div>
+     <div className="mt-34 flex justify-center gap-3 ">
 
+      
+       <div className="relative">
+            <div className="mt-1 flex justify-center gap-3">
+                <Text activeMode={activeMode} setActiveMode={setActiveMode} />
+                <Filess activeMode={activeMode} setActiveMode={setActiveMode} files={files} setFiles={setFiles} />
+                <Folder />
+                <Image />
+                <Video />
+            </div>
+
+            <ActivePanel activeMode={activeMode} files={files} />
+        </div>
+
+    </div>
     </div>
   );
 }
