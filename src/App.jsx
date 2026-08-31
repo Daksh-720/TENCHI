@@ -14,6 +14,7 @@ import ActivePanel from "./functions/ActivePanel";
 function App(){
   const [activeMode, setActiveMode] = useState("text");
   const [files, setFiles] = useState([]);
+  const [text, setText] = useState("");
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
       <GalaxyBg />
@@ -39,7 +40,7 @@ function App(){
                 <Video activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} />
             </div>
 
-            <ActivePanel activeMode={activeMode} files={files} />
+            <ActivePanel activeMode={activeMode} files={files} text={text} setText={setText} />
         </div>
 
     </div>
