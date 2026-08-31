@@ -11,6 +11,7 @@ import Filess from "./functions/Filess";
 import SendRet from "./functions/SendRet";
 import ActivePanel from "./functions/ActivePanel";
 import Retrieval from "./components/Retrieval";
+import ScrollButton from "./components/ScrollButton";
 
 function App(){
   const [activeMode, setActiveMode] = useState("text");
@@ -42,6 +43,7 @@ function App(){
             </div>
 
             <ActivePanel activeMode={activeMode} files={files} text={text} setText={setText} />
+            <ScrollButton />
         </div>
 
     </div>
