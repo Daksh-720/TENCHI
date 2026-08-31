@@ -12,6 +12,7 @@ import SendRet from "./functions/SendRet";
 import ActivePanel from "./functions/ActivePanel";
 import Retrieval from "./components/Retrieval";
 import ScrollButton from "./components/ScrollButton";
+import Login from "./functions/Login";
 
 function App(){
   const [activeMode, setActiveMode] = useState("text");
@@ -48,6 +49,7 @@ function App(){
 
     </div>
     <Retrieval />
+    <Login />
     </div>
   );
 }
