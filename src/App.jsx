@@ -13,6 +13,7 @@ import ActivePanel from "./functions/ActivePanel";
 import Retrieval from "./components/Retrieval";
 import ScrollButton from "./components/ScrollButton";
 import Login from "./functions/Login";
+import Register from "./functions/Register";
 
 function App(){
   const [activeMode, setActiveMode] = useState("text");
@@ -50,6 +51,7 @@ function App(){
     </div>
     <Retrieval />
     <Login />
+    <Register />
     </div>
   );
 }
