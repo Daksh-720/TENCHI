@@ -10,6 +10,7 @@ import Video from "./functions/Video";
 import Filess from "./functions/Filess";
 import SendRet from "./functions/SendRet";
 import ActivePanel from "./functions/ActivePanel";
+import Retrieval from "./components/Retrieval";
 
 function App(){
   const [activeMode, setActiveMode] = useState("text");
@@ -44,6 +45,7 @@ function App(){
         </div>
 
     </div>
+    <Retrieval />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import Galaxy from './Galaxy';
 
 export default function GalaxyBackground() {
   return (
-    <div className="absolute inset-0 z-0">
+    <div className="fixed inset-0 z-0">
       <Galaxy
         mouseRepulsion={false}
         mouseInteraction={true}
