@@ -3,7 +3,6 @@ import { createPortal } from "react-dom";
 function Login({ setAuthMode }) {
   const modalContent = (
     <div className="fixed inset-0 z-99999 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
-      {/* Background click to close */}
       <div 
         className="absolute inset-0" 
         onClick={() => setAuthMode(null)} 
@@ -46,5 +45,6 @@ function Login({ setAuthMode }) {
 
   return createPortal(modalContent, document.body);
 }
+
 
 export default Login;
