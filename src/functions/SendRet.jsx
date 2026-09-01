@@ -1,3 +1,7 @@
+import SetExpiry from "./SetExpiry";
+
+
+
 function SendRet(){
     return(
         <div className="flex items-center gap-4">
@@ -11,6 +15,7 @@ function SendRet(){
         readOnly
         className="h-12 w-48 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white backdrop-blur-md"
         />
+        <SetExpiry />
         </div>
     );
 }
