@@ -12,23 +12,25 @@ import SendRet from "./functions/SendRet";
 import ActivePanel from "./functions/ActivePanel";
 import Retrieval from "./components/Retrieval";
 import ScrollButton from "./components/ScrollButton";
-import Login from "./functions/Login";
-import Register from "./functions/Register";
+
 
 function App(){
   const [activeMode, setActiveMode] = useState("text");
   const [files, setFiles] = useState([]);
   const [text, setText] = useState("");
   return (
+
     <div className="relative min-h-screen overflow-hidden bg-black">
-      <GalaxyBg />
-
-
-      <div className="absolute top-6 right-6 z-50">
-        <nav className="ml-auto flex w-fit items-center gap-2 rounded-3xl border border-white/10 bg-white/7 p-2 shadow-lg backdrop-blur-md">
+    <div className="absolute top-6 right-6 z-50 isolate">
+        <nav className="relative ml-auto flex w-fit items-center gap-2 rounded-3xl border border-white/10 bg-white/7 p-2 shadow-lg backdrop-blur-md">
         <HamBurgerMenu />
         <Theme/>
         </nav>
+      </div>
+
+    
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <GalaxyBg />
       </div>
 
 
@@ -45,13 +47,11 @@ function App(){
             </div>
 
             <ActivePanel activeMode={activeMode} files={files} text={text} setText={setText} />
-            <ScrollButton />
         </div>
 
     </div>
     <Retrieval />
-    <Login />
-    <Register />
+    <ScrollButton />
     </div>
   );
 }
