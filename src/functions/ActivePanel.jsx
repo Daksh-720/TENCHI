@@ -34,7 +34,11 @@ function ActivePanel({ activeMode, files, text, setText }) {
             )}
 
             <div className="absolute left-6/13 top-92 -translate-x-1/2">
-                <SendRet text={text} />
+                <SendRet
+                  activeMode={activeMode}
+                  text={text}
+                  files={files}
+                />
             </div>
         </>
     );
