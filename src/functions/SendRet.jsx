@@ -3,13 +3,16 @@ import { useState } from "react";
 
 
 
-function SendRet(){
+function SendRet({ text, files, activeMode }){
 
     const [expiryTime, setExpiryTime] = useState("");
     const [expiryUnit, setExpiryUnit] = useState("minutes");
 
     function handleSend(){
         const sendData = {
+            activeMode,
+            text,
+            files,
             expiryTime,
             expiryUnit
         };
