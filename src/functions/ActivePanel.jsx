@@ -32,7 +32,7 @@ function ActivePanel({ activeMode, files, text, setText }) {
                 </div>
             )}
 
-            <div className="absolute left-4/13 top-92 -translate-x-1/2">
+            <div className="absolute left-6/13 top-92 -translate-x-1/2">
                 <SendRet text={text} />
             </div>
         </>

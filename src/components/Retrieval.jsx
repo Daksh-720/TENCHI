@@ -1,6 +1,6 @@
 function Retrieval(){
     return (
-        <section className="relative mt-140 mx-auto w-125 mb-40">
+        <section className="relative mt-170 mx-auto w-125 mb-60">
             
                 <div className="rounded-xl border border-white bg-white/10 px-54 py-2 text-xl font-semibold text-white backdrop-blur-md mb-4">
                 Retrieve
