@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Timer } from "lucide-react";
 
 
-function SetExpiry(){
+function SetExpiry(expiryTime, setExpiryTime, expiryUnit, setExpiryUnit){
 
     const [showTimer, setShowTimer] = useState(false);
     const [time, setTime] = useState("");
@@ -40,15 +40,15 @@ function SetExpiry(){
                             type="number"
                             min="1"
                             placeholder="Time"
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
+                            value={expiryTime}
+                            onChange={(e) => setExpiryTime(e.target.value)}
                             className="h-10 w-24 rounded-lg border border-white/20 bg-white/10 px-3 text-white outline-none placeholder:text-white/40"
                         />
 
                         <select
-                            value={unit}
+                            value={expiryUnit}
                             placeholder="Minutes"
-                            onChange={(e) => setUnit(e.target.value)}
+                            onChange={(e) => setExpiryUnit(e.target.value)}
                             className="h-10 flex-1 rounded-lg border border-white/20 bg-white/10 px-2 text-white outline-none"
                         >
                             <option value="minutes" className="bg-white text-black">Minutes</option>
