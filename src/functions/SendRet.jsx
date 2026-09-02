@@ -8,14 +8,27 @@ function SendRet({ text, files, activeMode }){
     const [expiryTime, setExpiryTime] = useState("");
     const [expiryUnit, setExpiryUnit] = useState("minutes");
 
-    function handleSend(){
-        const sendData = {
-            activeMode,
-            text,
-            files,
-            expiryTime,
-            expiryUnit
-        };
+    
+    async function handleSend(){
+        const expiryMinutes = 
+        expiryUnit === "minutes" ? Number(expiryTime)
+                                 : expiryUnit === "hours"
+                                 ? Number(expiryTime) * 60
+                                 : Number(expiryTime) * 24 * 60;
+
+
+        const response = await fetch("http://localhost:8080/clips",{
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                content: text,
+                expiryMinutes: expiryMinutes
+            })
+        });
+
+        const data = await response.json(); 
     }
 
     return(
