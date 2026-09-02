@@ -21,7 +21,7 @@ function SetExpiry(){
 
             <button
                 onClick={() => setShowTimer(!showTimer)}
-                className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-2 text-white backdrop-blur-md transition hover:bg-white/20"
+                className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-1 text-white backdrop-blur-md transition hover:bg-white/20"
             >
                 <Timer size={18} />
                 Set Expiry
@@ -47,12 +47,13 @@ function SetExpiry(){
 
                         <select
                             value={unit}
+                            placeholder="Minutes"
                             onChange={(e) => setUnit(e.target.value)}
                             className="h-10 flex-1 rounded-lg border border-white/20 bg-white/10 px-2 text-white outline-none"
                         >
-                            <option value="minutes">Minutes</option>
-                            <option value="hours">Hours</option>
-                            <option value="days">Days</option>
+                            <option value="minutes" className="bg-white text-black">Minutes</option>
+                            <option value="hours" className="bg-white text-black">Hours</option>
+                            <option value="days" className="bg-white text-black">Days</option>
                         </select>
 
                     </div>
