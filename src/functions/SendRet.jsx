@@ -16,19 +16,53 @@ function SendRet({ text, files, activeMode }){
                                  ? Number(expiryTime) * 60
                                  : Number(expiryTime) * 24 * 60;
 
+        
+        if (activeMode === "text") {
+            const response = await fetch("http://localhost:8080/clips", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    content: text,
+                    expiryMinutes: expiryMinutes
+                })
+            });
+            const data = await response.json();
+        }
 
-        const response = await fetch("http://localhost:8080/clips",{
-            method: "POST",
-            headers: {
-                "Content-Type":"application/json"
-            },
-            body: JSON.stringify({
-                content: text,
-                expiryMinutes: expiryMinutes
-            })
-        });
+        if(
+            activeMode === "files" ||
+            activeMode === "folder" ||
+            activeMode === "image" ||
+            activeMode === "video"
+        ){
+            const formData = new FormData();
 
-        const data = await response.json(); 
+            if(files.length === 1) {
+                formData.append("file", files[0]);
+                formData.append("expiryMinutes", expiryMinutes);
+
+                const response = await fetch("http://localhost:8080/file", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.text();
+            } else{
+                files.forEach((file) => {
+                    formData.append("files", file);
+                });
+
+                formData.append("expiryMinutes", expiryMinutes);
+
+                const response = await fetch("https://localhost:8080/files", {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.text();
+            }
+        } 
     }
 
     return(
