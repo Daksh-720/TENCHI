@@ -13,6 +13,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 import com.daksh.springboard.security.JwtAuthenticationFilter;
+import org.springframework.http.HttpMethod;
+
 
 @Configuration
 public class SecurityConfig {
@@ -33,12 +35,13 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .cors(cors -> {})
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/auth/**").permitAll()
-            .requestMatchers("/clips/**").permitAll()
-            .requestMatchers("/file").permitAll()
-            .requestMatchers("/files").permitAll()
-            .anyRequest().authenticated()
-        )
+        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+        .requestMatchers("/auth/**").permitAll()
+        .requestMatchers("/clips/**").permitAll()
+        .requestMatchers("/file", "/files").permitAll()
+        .anyRequest().authenticated()
+       )
+       
         .addFilterBefore(
             jwtAuthenticationFilter,
             UsernamePasswordAuthenticationFilter.class
@@ -50,13 +53,10 @@ public class SecurityConfig {
 
    @Bean
    public CorsConfigurationSource corsConfigurationSource() {
-
     CorsConfiguration configuration = new CorsConfiguration();
-
     configuration.setAllowedOrigins(List.of(
         "http://localhost:5173"
     ));
-
     configuration.setAllowedMethods(List.of(
         "GET",
         "POST",
@@ -64,9 +64,7 @@ public class SecurityConfig {
         "DELETE",
         "OPTIONS"
     ));
-
     configuration.setAllowedHeaders(List.of("*"));
-
     UrlBasedCorsConfigurationSource source =
         new UrlBasedCorsConfigurationSource();
 
