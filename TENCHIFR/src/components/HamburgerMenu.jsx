@@ -7,7 +7,7 @@ function HamBurgerMenu() {
   const [authMode, setAuthMode] = useState(null);
   const menuRef = useRef(null);
 
-  // Close dropdown on outside click
+  
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -36,7 +36,7 @@ function HamBurgerMenu() {
         )}
       </button>
 
-      {/* Dropdown Menu */}
+      
       {menuOpen && (
         <div className="absolute right-0 top-full mt-2 w-44 rounded-xl border border-white/20 bg-black/80 p-1.5 shadow-2xl backdrop-blur-xl z-50">
           <button
