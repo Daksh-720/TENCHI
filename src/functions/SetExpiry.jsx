@@ -2,17 +2,18 @@ import { useState } from "react";
 import { Timer } from "lucide-react";
 
 
-function SetExpiry(expiryTime, setExpiryTime, expiryUnit, setExpiryUnit){
+function SetExpiry(props){
+
+    const { expiryTime, setExpiryTime, expiryUnit, setExpiryUnit } = props;
 
     const [showTimer, setShowTimer] = useState(false);
     const [time, setTime] = useState("");
     const [unit, setUnit] = useState("minutes");
 
     function handleSetExpiry(){
-        if(!time || Number(time) <= 0) {
+        if(!expiryTime || Number(expiryTime) <= 0) {
             return;
         }
-        console.log("Expiry: ", time, unit);
         setShowTimer(false);
     }
 
@@ -20,11 +21,12 @@ function SetExpiry(expiryTime, setExpiryTime, expiryUnit, setExpiryUnit){
         <div className="relative">
 
             <button
+                type="button"
                 onClick={() => setShowTimer(!showTimer)}
                 className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-1 text-white backdrop-blur-md transition hover:bg-white/20"
             >
                 <Timer size={18} />
-                Set Expiry
+                {expiryTime ? `${expiryTime} ${expiryUnit}` : "Set Expiry"}
             </button>
 
             {showTimer && (
@@ -61,6 +63,7 @@ function SetExpiry(expiryTime, setExpiryTime, expiryUnit, setExpiryUnit){
                     <div className="mt-4 flex justify-end gap-2">
 
                         <button
+                            type="button"
                             onClick={() => setShowTimer(false)}
                             className="cursor-pointer rounded-lg px-3 py-2 text-sm text-white/60 transition hover:text-white"
                         >
