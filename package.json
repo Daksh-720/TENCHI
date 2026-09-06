@@ -1,0 +1,8 @@
+{
+  "name": "tenchi",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix TENCHIFR run dev",
+    "build": "npm --prefix TENCHIFR run build"
+  }
+}
