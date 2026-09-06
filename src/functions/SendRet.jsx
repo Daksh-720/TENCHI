@@ -88,7 +88,7 @@ function SendRet({ text, files, activeMode }){
 
                 if(!response.ok){
                     const message = await response.text();
-                    throw new Error(message || "Failed to create clip");
+                    throw new Error(message || `Upload failed (${response.status})`);
                 }
 
                 const data = await response.json();
@@ -108,7 +108,7 @@ function SendRet({ text, files, activeMode }){
 
                 if(!response.ok){
                     const message = await response.text();
-                    throw new Error(message || "Failed to create clip");
+                    throw new Error(message || `Upload failed (${response.status})`);
                 }
 
                 const data = await response.json();
