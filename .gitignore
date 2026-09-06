@@ -1,0 +1,24 @@
+# Environment variables
+.env
+*.env
+
+# Dependencies & Build outputs
+node_modules/
+dist/
+dist-ssr/
+target/
+*.local
+
+# User uploads & Logs
+uploads/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS & Temp
+.DS_Store
+Thumbs.db
+*.tmp
+battery-report.html
