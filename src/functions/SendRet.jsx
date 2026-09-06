@@ -88,7 +88,7 @@ function SendRet({ text, files, activeMode }){
 
                 if(!response.ok){
                     const message = await response.text();
-                    throw new Error(message);
+                    throw new Error(message || "Failed to create clip");
                 }
 
                 const data = await response.json();
@@ -108,7 +108,7 @@ function SendRet({ text, files, activeMode }){
 
                 if(!response.ok){
                     const message = await response.text();
-                    throw new Error(message);
+                    throw new Error(message || "Failed to create clip");
                 }
 
                 const data = await response.json();
@@ -124,8 +124,11 @@ function SendRet({ text, files, activeMode }){
     
     return(
         <div className="flex flex-col items-center gap-2">
+
         <div className="flex items-center gap-4">
-        <button onClick={handleSend} className="rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer">
+        <button
+           type="button"
+           onClick={handleSend} className="rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer">
          SEND
         </button>
 
