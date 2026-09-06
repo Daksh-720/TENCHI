@@ -12,7 +12,9 @@ function SendRet({ text, files, activeMode }){
 
 
     async function handleSend(){
+        try{
         setError("");
+        setShareCode("");
         if(activeMode === "text" && !text.trim()) {
             setError("Please enter some text.");
             return;
@@ -114,8 +116,12 @@ function SendRet({ text, files, activeMode }){
 
             }
         } 
-    }
-
+        
+    }catch(err) {
+        setError(err.message || "Something went wrong. Please try again.");
+        }
+    } 
+    
     return(
         <div className="flex flex-col items-center gap-2">
         <div className="flex items-center gap-4">
@@ -148,5 +154,7 @@ function SendRet({ text, files, activeMode }){
         </div>
     );
 }
+
+
 
 export default SendRet
