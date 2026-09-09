@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { use, useState } from "react";
+import { useState } from "react";
 
 
 function Register({ setAuthMode }) {
@@ -21,9 +21,31 @@ async function handleRegister(){
     return;
   }
   if(password !== confirmPassword){
-    setError("Passwords doesn't match");
+    setError("Passwords do not match");
     return;
   }
+
+
+  const response = await fetch("http://localhost:8080/auth/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: username,
+      email: email,
+      password: password
+    }),
+  });
+
+  if(!response.ok) {
+    const message = await response.text();
+    setError(message);
+    return;
+  }
+
+  const data = await response.json();
+  setSuccess(`Registration Successful! Welcome ${data.username}.`);
 }
 
 
@@ -86,9 +108,26 @@ async function handleRegister(){
           />
         </div>
 
-        <button className="w-full cursor-pointer rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/20 py-3 font-semibold text-white transition hover:bg-[#737FF2]/40">
+        <button
+         onClick={handleRegister}
+         className="w-full cursor-pointer rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/20 py-3 font-semibold text-white transition hover:bg-[#737FF2]/40">
           Register
         </button>
+
+        {error && (
+          <p className="mt-4 text-center text-sm text-red-400">
+            {error}
+          </p>
+        )}
+
+
+        {success && (
+          <p className="mt-4 text-center text-sm text-green-400">
+            {success}
+          </p>
+        )}
+
+
       </div>
     </div>
   );
