@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { use, useState } from "react";
 
 
 function Register({ setAuthMode }) {
@@ -8,8 +8,25 @@ function Register({ setAuthMode }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  
+
+async function handleRegister(){
+  setError("");
+  setSuccess("");
+
+  if(!username || !email || !password || !confirmPassword){
+    setError("Please fill All Fields!");
+    return;
+  }
+  if(password !== confirmPassword){
+    setError("Passwords doesn't match");
+    return;
+  }
+}
+
+
   const modalContent = (
     <div className="fixed inset-0 z-99999 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
       <div 
@@ -33,6 +50,8 @@ function Register({ setAuthMode }) {
           <input
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="h-12 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-white outline-none placeholder:text-white/50 focus:border-[#00D2FF]/60"
           />
         </div>
@@ -41,6 +60,8 @@ function Register({ setAuthMode }) {
           <input
             type="email"
             placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="h-12 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-white outline-none placeholder:text-white/50 focus:border-[#00D2FF]/60"
           />
         </div>
@@ -49,6 +70,8 @@ function Register({ setAuthMode }) {
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="h-12 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-white outline-none placeholder:text-white/50 focus:border-[#00D2FF]/60"
           />
         </div>
@@ -57,6 +80,8 @@ function Register({ setAuthMode }) {
           <input
             type="password"
             placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             className="h-12 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-white outline-none placeholder:text-white/50 focus:border-[#00D2FF]/60"
           />
         </div>
