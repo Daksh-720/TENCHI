@@ -1,6 +1,15 @@
 import { createPortal } from "react-dom";
+import { useState } from "react";
+
 
 function Register({ setAuthMode }) {
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  
   const modalContent = (
     <div className="fixed inset-0 z-99999 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
       <div 
