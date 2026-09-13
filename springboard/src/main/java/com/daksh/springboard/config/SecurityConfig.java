@@ -1,5 +1,6 @@
 package com.daksh.springboard.config;
 
+import com.daksh.springboard.security.GoogleOAuthSuccessHandler;
 // import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +19,14 @@ import org.springframework.http.HttpMethod;
 
 @Configuration
 public class SecurityConfig {
+    private final GoogleOAuthSuccessHandler googleOAuthSuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter){
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, GoogleOAuthSuccessHandler googleOAuthSuccessHandler){
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.googleOAuthSuccessHandler = googleOAuthSuccessHandler;
     }
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -46,7 +50,8 @@ public class SecurityConfig {
         .addFilterBefore(
             jwtAuthenticationFilter,
             UsernamePasswordAuthenticationFilter.class
-        );
+        )
+        .oauth2Login(oauth2 -> oauth2.successHandler(googleOAuthSuccessHandler));
 
     return http.build();
    }
