@@ -1,10 +1,10 @@
 package com.daksh.springboard.security;
 
 import java.io.IOException;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Component;
 import com.daksh.springboard.repository.UserRepository;
 import com.daksh.springboard.service.JwtService;
@@ -31,6 +31,14 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         Authentication authentication) throws IOException, ServletException{
 
             OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+            String provider = oauthToken.getAuthorizedClientRegistrationId();
+
+            if (provider.equals("google")) {
+                // Google login
+            } else if (provider.equals("github")) {
+                // GitHub login
+            }
             String email = oauthUser.getAttribute("email");
             String name = oauthUser.getAttribute("name");
 
