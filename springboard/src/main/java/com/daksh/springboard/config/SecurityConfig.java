@@ -15,16 +15,20 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 import com.daksh.springboard.security.JwtAuthenticationFilter;
 import org.springframework.http.HttpMethod;
+import com.daksh.springboard.security.GitHubOAuthSuccessHandler;
 
 
 @Configuration
 public class SecurityConfig {
+
     private final GoogleOAuthSuccessHandler googleOAuthSuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final GitHubOAuthSuccessHandler gitHubOAuthSuccessHandler; 
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, GoogleOAuthSuccessHandler googleOAuthSuccessHandler){
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, GoogleOAuthSuccessHandler googleOAuthSuccessHandler, GitHubOAuthSuccessHandler gitHubOAuthSuccessHandler){
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.googleOAuthSuccessHandler = googleOAuthSuccessHandler;
+        this.gitHubOAuthSuccessHandler = gitHubOAuthSuccessHandler;
     }
 
     @Bean
