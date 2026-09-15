@@ -1,7 +1,5 @@
 package com.daksh.springboard.config;
 
-import com.daksh.springboard.security.GoogleOAuthSuccessHandler;
-// import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,20 +13,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 import com.daksh.springboard.security.JwtAuthenticationFilter;
 import org.springframework.http.HttpMethod;
-import com.daksh.springboard.security.GitHubOAuthSuccessHandler;
+import com.daksh.springboard.security.OAuthSuccessHandler;
 
 
 @Configuration
 public class SecurityConfig {
 
-    private final GoogleOAuthSuccessHandler googleOAuthSuccessHandler;
+    private final OAuthSuccessHandler oauthSuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final GitHubOAuthSuccessHandler gitHubOAuthSuccessHandler; 
+    
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, GoogleOAuthSuccessHandler googleOAuthSuccessHandler, GitHubOAuthSuccessHandler gitHubOAuthSuccessHandler){
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, OAuthSuccessHandler oauthSuccessHandler){
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.googleOAuthSuccessHandler = googleOAuthSuccessHandler;
-        this.gitHubOAuthSuccessHandler = gitHubOAuthSuccessHandler;
+        this.oauthSuccessHandler = oauthSuccessHandler;
     }
 
     @Bean
@@ -55,7 +52,7 @@ public class SecurityConfig {
             jwtAuthenticationFilter,
             UsernamePasswordAuthenticationFilter.class
         )
-        .oauth2Login(oauth2 -> oauth2.successHandler(googleOAuthSuccessHandler));
+        .oauth2Login(oauth2 -> oauth2.successHandler(oauthSuccessHandler));
 
     return http.build();
    }
