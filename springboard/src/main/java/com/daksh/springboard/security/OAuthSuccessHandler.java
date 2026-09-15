@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import com.daksh.springboard.repository.UserRepository;
-import com.daksh.springboard.service.AuthService;
+import com.daksh.springboard.service.JwtService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,11 +17,11 @@ import com.daksh.springboard.entity.User;
 public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserRepository userRepository;
-    private final AuthService authService;
+    private final JwtService jwtService;
 
-    public OAuthSuccessHandler(UserRepository userRepository, AuthService authService){
+    public OAuthSuccessHandler(UserRepository userRepository, JwtService jwtService){
         this.userRepository = userRepository;
-        this.authService = authService;
+        this.jwtService = jwtService;
     }
     
     @Override
@@ -39,7 +39,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
                                         new User(name, email, "")
                                       ));
 
-            String token = authService.generateToken(user.getEmail());
+            String token = jwtService.generateToken(user.getEmail());
             response.sendRedirect("http://localhost:5173?token=" + token);
         }
 }
