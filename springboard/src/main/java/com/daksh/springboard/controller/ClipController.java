@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.CreateClipResponse;
 import com.daksh.springboard.dto.FileResponse;
