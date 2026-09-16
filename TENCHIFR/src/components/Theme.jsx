@@ -7,7 +7,12 @@ function Theme({ darkMode, setDarkMode }) {
 
     return(
         <button onClick={toggleTheme}
-        className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-white backdrop-blur-md transition hover:bg-white/1">
+            className={`rounded-xl border px-4 py-2 backdrop-blur-md transition ${
+                darkMode
+                    ? "border-white/20 bg-white/10 text-white"
+                    : "border-black/20 bg-black/5 text-black"
+            }`}
+        >
             {darkMode?"Light":"dark"}
         </button>
     )
