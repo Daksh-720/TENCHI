@@ -12,9 +12,11 @@ import ActivePanel from "./functions/ActivePanel";
 import Retrieval from "./components/Retrieval";
 import ScrollButton from "./components/ScrollButton";
 import OAuth from "./auth/OAuth";
+import LightTheme from "./components/LightTheme";
 
 
 function App(){
+  const [darkMode, setDarkMode] = useState(true);
   const [activeMode, setActiveMode] = useState("text");
   const [files, setFiles] = useState([]);
   const [text, setText] = useState("");
@@ -25,7 +27,7 @@ function App(){
     <div className="absolute top-6 right-6 z-50">
         <nav className="relative ml-auto flex w-fit items-center gap-2 rounded-3xl border border-white/10 bg-white/7 p-2 shadow-lg backdrop-blur-md">
         <HamBurgerMenu />
-        <Theme/>
+        <Theme darkMode={darkMode} setDarkMode={setDarkMode} />
         </nav>
       </div>
 

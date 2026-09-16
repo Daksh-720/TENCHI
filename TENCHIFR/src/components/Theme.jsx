@@ -1,7 +1,5 @@
-import { useState } from "react";
 
-function Theme(){
-    const [darkMode, setDarkMode] = useState(false);
+function Theme({ darkMode, setDarkMode }) {
 
     function toggleTheme(){
         setDarkMode(!darkMode);
