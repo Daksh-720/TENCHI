@@ -34,18 +34,33 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             String provider = oauthToken.getAuthorizedClientRegistrationId();
 
-            if (provider.equals("google")) {
-                // Google login
-            } else if (provider.equals("github")) {
-                // GitHub login
+            String email = null;
+            String name = null;
+            
+            if ("google".equalsIgnoreCase(provider)) {
+                email = oauthUser.getAttribute("email");
+                name = oauthUser.getAttribute("name");
+            } else if ("github".equalsIgnoreCase(provider)) {
+                email = oauthUser.getAttribute("email");
+                name = oauthUser.getAttribute("name");
+                if (name == null) {
+                    name = oauthUser.getAttribute("login");
+                }
             }
-            String email = oauthUser.getAttribute("email");
-            String name = oauthUser.getAttribute("name");
 
-            User user = userRepository.findByEmail(email)
-                                      .orElseGet(() -> userRepository.save(
-                                        new User(name, email, "")
-                                      ));
+            if (email == null) {
+                response.sendError(
+                        HttpServletResponse.SC_BAD_REQUEST,
+                        "Email could not be retrieved from OAuth provider"
+                );
+                return;
+            }
+
+            User user = userRepository.findByEmail(email).orElse(null);
+            if (user == null) {
+                String username = name != null ? name : email;
+                user = userRepository.save(new User(username, email, ""));
+            }
 
             String token = jwtService.generateToken(user.getEmail());
             response.sendRedirect("http://localhost:5173?token=" + token);
