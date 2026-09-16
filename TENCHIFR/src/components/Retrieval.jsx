@@ -56,7 +56,7 @@ function Retrieval(){
             <div className="h-52 w-full rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
 
             {result && result.contentType === "TEXT" && (
-                <p className="whitespace-pre-wrap">
+                <p className="whitespace-pre-wrap text-amber-50">
                     {result.content}
                 </p>
             )}
@@ -66,7 +66,7 @@ function Retrieval(){
                     {result.files?.map((file) => (
                         <div 
                             key={file.id}
-                            className="flex items-center justify-between rounded-lg bg-white/10 px-4 py-2">
+                            className="flex items-center justify-between rounded-lg bg-white/10 px-4 py-2 text-amber-50">
 
                                 <span>{file.fileName}</span>
 
