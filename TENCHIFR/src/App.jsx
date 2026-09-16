@@ -42,7 +42,7 @@ function App(){
       
        <div className="relative">
             <div className="mt-1 flex justify-center gap-3">
-                <Text activeMode={activeMode} setActiveMode={setActiveMode} />
+                <Text activeMode={activeMode} setActiveMode={setActiveMode} darkMode={darkMode} />
                 <Filess activeMode={activeMode} setActiveMode={setActiveMode} files={files} setFiles={setFiles} />
                 <Folder activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} />
                 <Image activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} />
