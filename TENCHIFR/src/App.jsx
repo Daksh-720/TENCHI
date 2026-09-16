@@ -33,7 +33,7 @@ function App(){
 
     
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <GalaxyBg />
+        {darkMode ? <GalaxyBg /> : <LightTheme />}
       </div>
 
 
