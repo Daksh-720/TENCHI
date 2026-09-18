@@ -3,7 +3,7 @@ import { useState } from "react";
 
 
 
-function SendRet({ text, files, activeMode }){
+function SendRet({ text, files, activeMode, darkMode }) {
 
     const [expiryTime, setExpiryTime] = useState("");
     const [expiryUnit, setExpiryUnit] = useState("minutes");
@@ -123,12 +123,17 @@ function SendRet({ text, files, activeMode }){
     } 
     
     return(
-        <div className="flex flex-col items-center gap-2">
+        <div className={darkMode ? "flex flex-col items-center gap-2":"flex flex-col items-center gap-2"}>
 
-        <div className="flex items-center gap-4">
+        <div className={darkMode ? "flex items-center gap-4":"flex items-center gap-4"}>
         <button
            type="button"
-           onClick={handleSend} className="rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer">
+           onClick={handleSend}
+           className={
+            darkMode
+                ? "rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer"
+                : "rounded-xl border-3 border-[#00D2FF]/90 bg-[#737FF2]/40 px-8 py-3 text-turquoise backdrop-blur-md transition hover:bg-[#454C91]/40 hover:text-white hover:backdrop-blur-xl cursor-pointer"
+           }>
          SEND
         </button>
 
@@ -137,7 +142,11 @@ function SendRet({ text, files, activeMode }){
         placeholder="Generated-code:"
         value={shareCode}
         readOnly
-        className="h-12 w-48 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white backdrop-blur-md"
+        className={
+            darkMode
+                ? "h-12 w-48 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white backdrop-blur-md"
+                : "h-12 w-48 rounded-xl border border-black/20 bg-white/50 px-4 py-3 text-black backdrop-blur-md"
+        }
         />
 
         <SetExpiry 
@@ -145,6 +154,7 @@ function SendRet({ text, files, activeMode }){
         setExpiryTime={setExpiryTime}
         expiryUnit={expiryUnit}
         setExpiryUnit={setExpiryUnit}
+        darkMode={darkMode}
         />
 
         </div>
