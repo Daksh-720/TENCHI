@@ -49,7 +49,7 @@ function App(){
                 <Video activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} darkMode={darkMode} />
             </div>
 
-            <ActivePanel activeMode={activeMode} files={files} text={text} setText={setText} />
+            <ActivePanel activeMode={activeMode} files={files} text={text} setText={setText} darkMode={darkMode} />
         </div>
 
     </div>

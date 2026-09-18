@@ -3,7 +3,7 @@ import SendRet from "./SendRet";
 import SetExpiry from "./SetExpiry";
 
 
-function ActivePanel({ activeMode, files, text, setText }) {
+function ActivePanel({ activeMode, files, text, setText, darkMode }) {
     if (!activeMode) return null;
 
     const fileModes = ["files", "folder", "image", "video"];
