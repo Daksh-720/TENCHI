@@ -15,7 +15,11 @@ function ActivePanel({ activeMode, files, text, setText }) {
                  value={text}
                  onChange={(e)=> setText(e.target.value)}
                  placeholder="Enter Text..."
-                 className="absolute left-1/2 top-34 h-52 w-125 -translate-x-1/2 resize-none rounded-2xl border border-white/20 bg-white/10 p-5 text-white outline-none backdrop-blur-md placeholder:text-white/50 focus:border-white/40"
+                 className={
+                    darkMode
+                        ? "absolute left-1/2 top-34 h-52 w-125 -translate-x-1/2 resize-none rounded-2xl border border-white/20 bg-white/10 p-5 text-white outline-none backdrop-blur-md placeholder:text-white/50 focus:border-white/40"
+                        : "absolute left-1/2 top-34 h-52 w-125 -translate-x-1/2 resize-none rounded-2xl border border-black/10 bg-white/50 p-5 text-black outline-none backdrop-blur-md placeholder:text-black/40 shadow-md focus:border-black/20"
+                }
                 />
             )}
 
