@@ -1,44 +1,38 @@
-import { useEffect, useState } from "react";
+import RubberSegment from "./RubberSegment";
+import { PackageOpen, Send as SendIcon } from "lucide-react";
 
-
-
-function ScrollButton() {
-    const [atRetrieve, setAtRetrieve] = useState(false);
-
-    useEffect(() => {
-        function handleScroll() {
-            setAtRetrieve(window.scrollY > window.innerHeight*0.5);
-        }
-        window.addEventListener("scroll", handleScroll);
-
-        return() => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
-
-
-    function handleClick() {
-        if(atRetrieve) {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        }
-        else{
-            window.scrollTo({
-                top: document.documentElement.scrollHeight,
-                behavior: "smooth"
-            });
-        }
-    }
-
+function ScrollButton({ darkMode, sendRef, retrieveRef }) {
     return (
-        <button
-         onClick={handleClick}
-         className="fixed bottom-6 right-6 z-50 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-white/10 text-xl text-white backdrop-blur-md transition hover:bg-white/20">
+        <div className="fixed h-28 w-18 top-1/2 right-17 z-50 -translate-y-2/2">
+            <RubberSegment
+                items={[
+                    { value: "Send", label: "SEND", icon: <SendIcon size={24} strokeWidth={1.5} /> },
+                    { value: "Retrieve", label: "RETRIEVE", icon: <PackageOpen size={24} strokeWidth={1.5} /> },
+                ]}
+                defaultValue="Send"
+                onChange={(value) => {
+                    if (value === "Send") {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        return;
+                    }
 
-            {atRetrieve ? "↑" : "↓"}
-         </button>
+                    retrieveRef?.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }}
+                trackColor={darkMode ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.65)"}
+                thumbColor={darkMode ? "#fafafa" : "#111827"}
+                textColor={darkMode ? "#fafafa" : "#111827"}
+                activeTextColor={darkMode ? "#18181b" : "#ffffff"}
+                separatorColor={darkMode ? "rgba(255,255,255,0.25)" : "rgba(17,24,39,0.25)"}
+                radius={24}
+                size="md"
+                vertical
+                draggable
+                aria-label="Move between sending and retrieving"
+            />
+        </div>
     );
 }
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
 import HamBurgerMenu from "./components/HamBurgerMenu";
 import GalaxyBg from './components/GalaxyBg';
@@ -20,6 +20,8 @@ function App(){
   const [activeMode, setActiveMode] = useState("text");
   const [files, setFiles] = useState([]);
   const [text, setText] = useState("");
+  const sendRef = useRef(null);
+  const retrieveRef = useRef(null);
   return (
 
     <div className={darkMode ? "relative min-h-screen overflow-hidden bg-black" : "relative min-h-screen overflow-hidden bg-[#F3EBDD]"}>
@@ -37,7 +39,7 @@ function App(){
       </div>
 
 
-     <div className="mt-34 flex justify-center gap-3 ">
+    <div ref={sendRef} className="mt-34 flex justify-center gap-3 ">
 
       
        <div className="relative">
@@ -53,8 +55,10 @@ function App(){
         </div>
 
     </div>
-    <Retrieval darkMode={darkMode} />
-    <ScrollButton />
+    <div ref={retrieveRef}>
+      <Retrieval darkMode={darkMode} />
+    </div>
+    <ScrollButton darkMode={darkMode} sendRef={sendRef} retrieveRef={retrieveRef} />
     </div>
   );
 }
