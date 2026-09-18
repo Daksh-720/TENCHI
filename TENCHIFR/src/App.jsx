@@ -22,11 +22,11 @@ function App(){
   const [text, setText] = useState("");
   return (
 
-    <div className="relative min-h-screen overflow-hidden bg-black">
+    <div className={darkMode ? "relative min-h-screen overflow-hidden bg-black" : "relative min-h-screen overflow-hidden bg-[#F3EBDD]"}>
       <OAuth />
     <div className="absolute top-6 right-6 z-50">
-        <nav className="relative ml-auto flex w-fit items-center gap-2 rounded-3xl border border-white/10 bg-white/7 p-2 shadow-lg backdrop-blur-md">
-        <HamBurgerMenu />
+        <nav className={darkMode ? "relative ml-auto flex w-fit items-center gap-2 rounded-3xl border border-white/10 bg-white/7 p-2 shadow-lg backdrop-blur-md" : "relative ml-auto flex w-fit items-center gap-2 rounded-3xl border border-black/10 bg-white/30 p-2 shadow-lg backdrop-blur-md"}>
+        <HamBurgerMenu darkMode={darkMode} setDarkMode={setDarkMode} />
         <Theme darkMode={darkMode} setDarkMode={setDarkMode} />
         </nav>
       </div>
