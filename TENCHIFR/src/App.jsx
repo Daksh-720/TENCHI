@@ -53,7 +53,7 @@ function App(){
         </div>
 
     </div>
-    <Retrieval />
+    <Retrieval darkMode={darkMode} />
     <ScrollButton />
     </div>
   );

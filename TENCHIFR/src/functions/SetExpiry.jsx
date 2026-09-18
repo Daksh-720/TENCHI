@@ -4,7 +4,7 @@ import { Timer } from "lucide-react";
 
 function SetExpiry(props){
 
-    const { expiryTime, setExpiryTime, expiryUnit, setExpiryUnit } = props;
+    const { expiryTime, setExpiryTime, expiryUnit, setExpiryUnit, darkMode } = props;
 
     const [showTimer, setShowTimer] = useState(false);
     const [time, setTime] = useState("");
@@ -18,12 +18,24 @@ function SetExpiry(props){
     }
 
      return (
-        <div className="relative">
+        <div
+            className="relative"
+            tabIndex={0}
+            onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                    setShowTimer(false);
+                }
+            }}
+        >
 
             <button
                 type="button"
                 onClick={() => setShowTimer(!showTimer)}
-                className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-1 text-white backdrop-blur-md transition hover:bg-white/20"
+                className={
+                    darkMode
+                        ? "flex cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-1 text-white backdrop-blur-md transition hover:bg-white/20"
+                        : "flex cursor-pointer items-center gap-2 rounded-xl border border-black/20 bg-white/50 px-6 py-1 text-black backdrop-blur-md transition hover:bg-white/70"
+                }
             >
                 <Timer size={18} />
                 {expiryTime ? `${expiryTime} ${expiryUnit}` : "Set Expiry"}
