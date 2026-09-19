@@ -22,7 +22,7 @@ function HamBurgerMenu({ darkMode }) {
   return (
     <>
     <div className="relative" ref={menuRef}>
-      <button
+        <button
         onClick={() => setMenuOpen((prev) => !prev)}
         className={
                     darkMode
@@ -45,7 +45,7 @@ function HamBurgerMenu({ darkMode }) {
                   <span className={darkMode ? "block h-0.5 w-5 rounded bg-white" : "block h-0.5 w-5 rounded bg-black"}></span>
                 </div>
         )}
-      </button>
+        </button>
 
       
       {menuOpen && (

@@ -26,7 +26,15 @@ function App(){
 
     <div className={darkMode ? "relative min-h-screen overflow-hidden bg-black" : "relative min-h-screen overflow-hidden bg-[#F3EBDD]"}>
       <OAuth />
-    <div className="absolute top-6 right-6 z-50">
+    <div className="absolute top-6 right-6 z-50 flex items-center gap-2">
+
+        <div className={darkMode
+          ? "whitespace-nowrap rounded-xl border border-white/50 bg-black/40 px-4 py-2 text-lg font-bold tracking-[0.3em] text-white backdrop-blur-md"
+          : "whitespace-nowrap rounded-xl border border-black/50 bg-white/70 px-4 py-2 text-lg font-bold tracking-[0.3em] text-black backdrop-blur-md shadow-md"}>
+          ＴΞNCHI
+        </div>
+
+
         <nav className={darkMode ? "relative ml-auto flex w-fit items-center gap-2 rounded-3xl border border-white/10 bg-white/7 p-2 shadow-lg backdrop-blur-md" : "relative ml-auto flex w-fit items-center gap-2 rounded-3xl border border-black/10 bg-white/30 p-2 shadow-lg backdrop-blur-md"}>
         <HamBurgerMenu darkMode={darkMode} setDarkMode={setDarkMode} />
         <Theme darkMode={darkMode} setDarkMode={setDarkMode} />
