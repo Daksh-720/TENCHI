@@ -12,7 +12,7 @@ import com.daksh.springboard.model.ContentType;
 import com.daksh.springboard.model.clipFile;
 import com.daksh.springboard.repository.ClipRepository;
 import com.daksh.springboard.util.CodeGenerator;
-
+import com.daksh.springboard.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.FileSystemResource;
@@ -37,7 +37,12 @@ public class ClipService {
 
 
     public Clip createClip(CreateClipRequest request){
+      return createClip(request, null);
+    }
+
+    public Clip createClip(CreateClipRequest request, User owner){
         Clip clip = new Clip();
+      clip.setOwner(owner);
         clip.setContent(request.getContent());
         clip.setContentType(ContentType.TEXT);
         
@@ -63,6 +68,10 @@ public class ClipService {
     public List<Clip> getAllClips(){
     return clipRepository.findByExpiresAtAfter(LocalDateTime.now());
   }
+
+    public List<Clip> getHistory(User owner){
+      return clipRepository.findByOwnerAndExpiresAtAfterOrderByCreatedAtDesc(owner, LocalDateTime.now());
+    }
 
 
   public Clip getClipById(Long id){
@@ -145,8 +154,13 @@ public class ClipService {
 
 
   public Clip createFileClip(MultipartFile file, Integer expiryMinutes){
+    return createFileClip(file, expiryMinutes, null);
+  }
+
+  public Clip createFileClip(MultipartFile file, Integer expiryMinutes, User owner){
     FileInfo fileInfo = saveFile(file);
     Clip clip = new Clip();
+    clip.setOwner(owner);
     clipFile clipFile = new clipFile();
     clipFile.setContentType(getFileContentType(file));
     clip.setContentType(getFileContentType(file));
@@ -174,7 +188,12 @@ public class ClipService {
 
 
   public Clip createMultipleFileClip(MultipartFile[] files, Integer expiryMinutes){
+    return createMultipleFileClip(files, expiryMinutes, null);
+  }
+
+  public Clip createMultipleFileClip(MultipartFile[] files, Integer expiryMinutes, User owner){
     Clip clip = new Clip();
+    clip.setOwner(owner);
     clip.setContentType(ContentType.FILE);
     LocalDateTime createdAt = LocalDateTime.now();
     clip.setCreatedAt(createdAt);
