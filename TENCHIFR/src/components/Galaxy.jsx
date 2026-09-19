@@ -205,6 +205,7 @@ function Galaxy({
   autoCenterRepulsion = 0,
   transparent = true,
   lightMode = false,
+  paused = false,
   ...rest
 }) {
   const focalX = focal[0];
@@ -217,6 +218,18 @@ function Galaxy({
   const smoothMousePos = useRef({ x: 0.5, y: 0.5 });
   const targetMouseActive = useRef(0.0);
   const smoothMouseActive = useRef(0.0);
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
+  const loopControllerRef = useRef(null);
+
+  useEffect(() => {
+    if (!loopControllerRef.current) return;
+    if (paused) {
+      loopControllerRef.current.pause();
+    } else {
+      loopControllerRef.current.resume();
+    }
+  }, [paused]);
 
   useEffect(() => {
     if (!ctnDom.current) return;
@@ -357,8 +370,34 @@ function Galaxy({
     });
 
     let animateId;
+    let isRunning = false;
+
+    function startLoop() {
+      if (isRunning) return;
+      isRunning = true;
+      animateId = requestAnimationFrame(update);
+    }
+
+    function stopLoop() {
+      if (!isRunning) return;
+      isRunning = false;
+      if (animateId) {
+        cancelAnimationFrame(animateId);
+        animateId = null;
+      }
+    }
+
+    loopControllerRef.current = {
+      pause: stopLoop,
+      resume: startLoop
+    };
 
     function update(t) {
+      if (!isRunning || pausedRef.current) {
+        isRunning = false;
+        return;
+      }
+
       animateId = requestAnimationFrame(update);
 
       if (!disableAnimation) {
@@ -395,11 +434,14 @@ function Galaxy({
       });
     }
 
-    animateId = requestAnimationFrame(update);
+    if (!pausedRef.current) {
+      startLoop();
+    }
 
     ctn.appendChild(gl.canvas);
 
     function handleMouseMove(e) {
+      if (pausedRef.current) return;
       const rect = ctn.getBoundingClientRect();
 
       const x =
@@ -414,6 +456,7 @@ function Galaxy({
     }
 
     function handleMouseLeave() {
+      if (pausedRef.current) return;
       targetMouseActive.current = 0.0;
     }
 
@@ -430,7 +473,8 @@ function Galaxy({
     }
 
     return () => {
-      cancelAnimationFrame(animateId);
+      loopControllerRef.current = null;
+      stopLoop();
 
       window.removeEventListener(
         'resize',

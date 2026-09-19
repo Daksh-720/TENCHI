@@ -38,6 +38,8 @@ function App(){
     setDarkMode(nextMode);
   };
 
+  const isGalaxyActive = darkMode || themeTransition !== null;
+
   return (
     <div className={`relative min-h-screen overflow-hidden transition-colors duration-700 ease-in-out ${darkMode ? "bg-black text-white" : "bg-[#F3EBDD] text-black"}`}>
       <ThemeTransition
@@ -86,10 +88,16 @@ function App(){
 
     
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${darkMode ? "opacity-100" : "opacity-0"}`}>
-          <GalaxyBg />
+        <div
+          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${darkMode ? "opacity-100" : "opacity-0"}`}
+          style={{ display: isGalaxyActive ? "block" : "none" }}
+        >
+          <GalaxyBg paused={!isGalaxyActive} />
         </div>
-        <div className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${darkMode ? "opacity-0" : "opacity-100"}`}>
+        <div
+          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${darkMode ? "opacity-0" : "opacity-100"}`}
+          style={{ display: !darkMode || themeTransition !== null ? "block" : "none" }}
+        >
           <LightTheme />
         </div>
       </div>

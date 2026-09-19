@@ -3,7 +3,7 @@ import { PackageOpen, Send as SendIcon } from "lucide-react";
 
 function ScrollButton({ darkMode, sendRef, retrieveRef }) {
     return (
-        <div className="fixed h-28 w-18 top-1/2 right-17 z-50 -translate-y-2/2">
+        <div className="fixed w-18 top-1/2 right-17 z-50 -translate-y-1/2">
             <RubberSegment
                 items={[
                     { value: "Send", label: "SEND", icon: <SendIcon size={24} strokeWidth={1.5} /> },

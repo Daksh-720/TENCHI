@@ -1,12 +1,13 @@
 import { memo } from 'react';
 import Galaxy from './Galaxy';
 
-function GalaxyBackground() {
+function GalaxyBackground({ paused = false }) {
   return (
     <div className="fixed inset-0 z-0">
       <Galaxy
+        paused={paused}
         mouseRepulsion={false}
-        mouseInteraction={true}
+        mouseInteraction={!paused}
         density={2.3}
         glowIntensity={0.2}
         saturation={0}
