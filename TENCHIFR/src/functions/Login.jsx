@@ -1,6 +1,11 @@
+import { useState } from "react";
 import { createPortal } from "react-dom";
 
 function Login({ setAuthMode }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   function handleGoogleLogin() {
     window.location.href =
@@ -10,6 +15,33 @@ function Login({ setAuthMode }) {
   function handleGithubLogin() {
     window.location.href =
       "http://localhost:8080/oauth2/authorization/github";
+  }
+
+  async function handleLogin(event) {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Invalid email or password.");
+      }
+
+      const data = await response.json();
+      localStorage.setItem("token", data.token);
+      window.dispatchEvent(new Event("tenchi-authenticated"));
+      setAuthMode(null);
+    } catch (loginError) {
+      setError(loginError.message || "Login failed.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const modalContent = (
@@ -33,10 +65,13 @@ function Login({ setAuthMode }) {
           Login
         </h2>
 
+        <form onSubmit={handleLogin}>
         <div className="mb-4">
           <input
             type="email"
             placeholder="Enter Email..."
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
             className="h-12 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-white outline-none placeholder:text-white/50 focus:border-[#00D2FF]/60"
           />
         </div>
@@ -45,15 +80,22 @@ function Login({ setAuthMode }) {
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
             className="h-12 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-white outline-none placeholder:text-white/50 focus:border-[#00D2FF]/60"
           />
         </div>
 
         <button
+          type="submit"
+          disabled={loading}
           className="w-full cursor-pointer rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/20 py-3 font-semibold text-white transition hover:bg-[#737FF2]/40"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
+
+        {error && <p className="mt-3 text-center text-sm text-red-400">{error}</p>}
+        </form>
 
         {/* OAuth Divider */}
         <div className="my-5 flex items-center gap-3">

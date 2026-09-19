@@ -131,16 +131,16 @@ function SendRet({ text, files, activeMode, darkMode }) {
         <div className={darkMode ? "flex flex-col items-center gap-2":"flex flex-col items-center gap-2"}>
 
         <div className={darkMode ? "flex items-center gap-4":"flex items-center gap-4"}>
-        <button
-           type="button"
-           onClick={handleSend}
-           className={
-            darkMode
-                ? "rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer"
-                : "rounded-xl border-3 border-[#00D2FF]/90 bg-[#737FF2]/40 px-8 py-3 text-turquoise backdrop-blur-md transition hover:bg-[#454C91]/40 hover:text-white hover:backdrop-blur-xl cursor-pointer"
-           }>
-         SEND
-        </button>
+                <button
+                     type="button"
+                     onClick={handleSend}
+                     className={
+                        darkMode
+                                ? "rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer"
+                                : "rounded-xl border-3 border-[#00D2FF]/90 bg-[#737FF2]/40 px-8 py-3 text-turquoise backdrop-blur-md transition hover:bg-[#454C91]/40 hover:text-white hover:backdrop-blur-xl cursor-pointer"
+                     }>
+                 SEND
+                </button>
 
         <input
         type="text"

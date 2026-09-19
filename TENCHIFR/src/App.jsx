@@ -18,7 +18,7 @@ import ProfileAvatar from "./components/ProfileAvatar";
 
 
 function App(){
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [activeMode, setActiveMode] = useState("text");
   const [files, setFiles] = useState([]);
   const [text, setText] = useState("");
@@ -30,7 +30,15 @@ function App(){
     <div className={darkMode ? "relative min-h-screen overflow-hidden bg-black" : "relative min-h-screen overflow-hidden bg-[#F3EBDD]"}>
       <OAuth />
       <ProfileAvatar darkMode={darkMode} onHistory={() => setHistoryOpen(true)} />
+
     <div className="absolute top-6 right-6 z-50 flex items-center gap-2">
+
+      <div className={darkMode
+          ? "whitespace-nowrap rounded-full border border-white/50 bg-black/40 px-4 py-2 text-lg text-white backdrop-blur-md margin-right:100px"
+          : "whitespace-nowrap rounded-full border border-black/50 bg-white/70 px-4 py-2 text-lg  text-black backdrop-blur-md shadow-md margin-right:100px"}>
+          Online Data Sharing Platform
+          </div>
+
 
         <div className={darkMode
           ? "whitespace-nowrap rounded-xl border border-white/50 bg-black/40 px-4 py-2 text-lg font-bold tracking-[0.3em] text-white backdrop-blur-md"
