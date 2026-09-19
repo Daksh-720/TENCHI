@@ -1,5 +1,5 @@
 import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 
 const vertexShader = `
 attribute vec2 uv;
@@ -184,9 +184,12 @@ void main() {
 }
 `;
 
-export default function Galaxy({
-  focal = [0.5, 0.5],
-  rotation = [1.0, 0.0],
+const DEFAULT_FOCAL = [0.5, 0.5];
+const DEFAULT_ROTATION = [1.0, 0.0];
+
+function Galaxy({
+  focal = DEFAULT_FOCAL,
+  rotation = DEFAULT_ROTATION,
   starSpeed = 0.5,
   density = 1,
   hueShift = 140,
@@ -204,6 +207,11 @@ export default function Galaxy({
   lightMode = false,
   ...rest
 }) {
+  const focalX = focal[0];
+  const focalY = focal[1];
+  const rotX = rotation[0];
+  const rotY = rotation[1];
+
   const ctnDom = useRef(null);
   const targetMousePos = useRef({ x: 0.5, y: 0.5 });
   const smoothMousePos = useRef({ x: 0.5, y: 0.5 });
@@ -448,8 +456,10 @@ export default function Galaxy({
       )?.loseContext();
     };
   }, [
-    focal,
-    rotation,
+    focalX,
+    focalY,
+    rotX,
+    rotY,
     starSpeed,
     density,
     hueShift,
@@ -475,3 +485,5 @@ export default function Galaxy({
     />
   );
 }
+
+export default memo(Galaxy);

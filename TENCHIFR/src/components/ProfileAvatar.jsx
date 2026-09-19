@@ -18,7 +18,7 @@ function getUser(token) {
     }
 }
 
-function ProfileAvatar({ darkMode, onHistory }) {
+function ProfileAvatar({ darkMode, onHistory, className = "relative" }) {
     const [user, setUser] = useState(() => getUser(localStorage.getItem("token")));
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
@@ -51,7 +51,7 @@ function ProfileAvatar({ darkMode, onHistory }) {
     }
 
     return (
-        <div ref={menuRef} className="fixed left-6 top-6 z-50">
+        <div ref={menuRef} className={className}>
             <button
                 type="button"
                 onClick={() => setMenuOpen((open) => !open)}

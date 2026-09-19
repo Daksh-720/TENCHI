@@ -436,7 +436,7 @@ export default function SlingButton({
         <button
           ref={padRef}
           type="button"
-          className="group/pad relative m-0 block h-full w-full cursor-grab touch-none rounded-full border-0 bg-transparent p-0 outline-none select-none [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] after:absolute after:-inset-1.5 after:rounded-full after:content-[''] data-[held]:cursor-grabbing aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+          className="group/pad relative m-0 block h-full w-full cursor-grab touch-none rounded-full border-0 bg-transparent p-0 outline-none select-none [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] after:absolute after:-inset-1.5 after:rounded-full after:content-[''] data-held:cursor-grabbing aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
           aria-label={ariaLabel}
           title={title || ariaLabel}
           aria-describedby={hintId}
@@ -460,7 +460,7 @@ export default function SlingButton({
           }}
         >
           <span
-            className="flex h-full w-full items-center justify-center rounded-full transition-all duration-200 ease-out group-data-[held]/pad:scale-[0.96] group-data-[armed]/pad:scale-[1.05] [@media(hover:hover)_and_(pointer:fine)]:group-hover/pad:scale-[1.02]"
+            className="flex h-full w-full items-center justify-center rounded-full transition-all duration-200 ease-out group-data-held/pad:scale-[0.96] group-data-armed/pad:scale-[1.05] [@media(hover:hover)_and_(pointer:fine)]:group-hover/pad:scale-[1.02]"
             style={{
               backgroundColor: padColor,
               color: iconColor,

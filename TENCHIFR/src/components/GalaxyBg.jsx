@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import Galaxy from './Galaxy';
 
-export default function GalaxyBackground() {
+function GalaxyBackground() {
   return (
     <div className="fixed inset-0 z-0">
       <Galaxy
@@ -20,3 +21,5 @@ export default function GalaxyBackground() {
     </div>
   );
 }
+
+export default memo(GalaxyBackground);
