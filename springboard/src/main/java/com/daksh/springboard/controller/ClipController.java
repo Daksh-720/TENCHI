@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.daksh.springboard.entity.User;
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.CreateClipResponse;
 import com.daksh.springboard.dto.FileResponse;
@@ -35,8 +37,9 @@ public class ClipController {
     
 
     @PostMapping("/clips")
-    public ResponseEntity<CreateClipResponse> createClip(@RequestBody CreateClipRequest request){
-        Clip clip = clipService.createClip(request);
+    public ResponseEntity<CreateClipResponse> createClip(@RequestBody CreateClipRequest request,
+                                                         @AuthenticationPrincipal User user){
+        Clip clip = clipService.createClip(request, user);
         CreateClipResponse response = new CreateClipResponse(
             clip.getId(),
             clip.getShareCode(),
@@ -49,6 +52,18 @@ public class ClipController {
     public ResponseEntity<List<GetClipResponse>> getAllClips(){
         List<GetClipResponse> responses = new ArrayList<>();
         for(Clip clip : clipService.getAllClips()){
+            responses.add(mapToGetClipResponse(clip));
+        }
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/clips/history")
+    public ResponseEntity<List<GetClipResponse>> getHistory(@AuthenticationPrincipal User user){
+        if(user == null){
+            return ResponseEntity.status(401).build();
+        }
+        List<GetClipResponse> responses = new ArrayList<>();
+        for(Clip clip : clipService.getHistory(user)){
             responses.add(mapToGetClipResponse(clip));
         }
         return ResponseEntity.ok(responses);
@@ -95,16 +110,20 @@ public class ClipController {
 
 
     @PostMapping("/file")
-    public ResponseEntity<CreateClipResponse> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(required = false)Integer expiryMinutes){
-        Clip clip = clipService.createFileClip(file, expiryMinutes);
+    public ResponseEntity<CreateClipResponse> uploadFile(@RequestParam("file") MultipartFile file,
+                                                         @RequestParam(required = false)Integer expiryMinutes,
+                                                         @AuthenticationPrincipal User user){
+        Clip clip = clipService.createFileClip(file, expiryMinutes, user);
         CreateClipResponse response = new CreateClipResponse(clip.getId(), clip.getShareCode(), "File uploaded Successfully!!");
         return ResponseEntity.ok(response);
     }
 
 
     @PostMapping("/files")
-    public ResponseEntity<CreateClipResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files, @RequestParam(required = false) Integer expiryMinutes){
-        Clip clip = clipService.createMultipleFileClip(files, expiryMinutes);
+    public ResponseEntity<CreateClipResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files,
+                                                                  @RequestParam(required = false) Integer expiryMinutes,
+                                                                  @AuthenticationPrincipal User user){
+        Clip clip = clipService.createMultipleFileClip(files, expiryMinutes, user);
         CreateClipResponse response = new CreateClipResponse(clip.getId(), clip.getShareCode(), "File uploaded Successfully!!");
         return ResponseEntity.ok(response);
     }

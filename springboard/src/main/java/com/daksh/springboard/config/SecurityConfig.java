@@ -42,6 +42,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
         .requestMatchers("/auth/**").permitAll()
+        .requestMatchers("/clips/history").authenticated()
         .requestMatchers("/clips", "/clips/**").permitAll()
         .requestMatchers("/file", "/files", "/file/**", "/files/**").permitAll()
         .requestMatchers("/error").permitAll()

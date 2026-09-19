@@ -9,6 +9,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import com.daksh.springboard.entity.User;
 // import com.daksh.springboard.model.clipFile;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,10 @@ public class Clip {
     private String fileName;
     private String filePath;
     private Long fileSize;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
     @OneToMany(mappedBy = "clip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<clipFile> files = new ArrayList<>();
@@ -95,6 +102,14 @@ public class Clip {
     }
     public void setFileSize(Long fileSize){
         this.fileSize = fileSize;
+    }
+
+    public User getOwner(){
+        return owner;
+    }
+
+    public void setOwner(User owner){
+        this.owner = owner;
     }
 
     public List<clipFile> getFiles(){
