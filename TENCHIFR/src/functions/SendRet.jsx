@@ -13,6 +13,8 @@ function SendRet({ text, files, activeMode, darkMode }) {
 
     async function handleSend(){
         try{
+        const token = localStorage.getItem("token");
+        const authorization = token ? { Authorization: `Bearer ${token}` } : {};
         setError("");
         setShareCode("");
         if(activeMode === "text" && !text.trim()) {
@@ -52,7 +54,8 @@ function SendRet({ text, files, activeMode, darkMode }) {
             const response = await fetch("http://localhost:8080/clips", {
                 method: "POST",
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    ...authorization
                 },
                 body: JSON.stringify({
                     content: text,
@@ -83,6 +86,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
 
                 const response = await fetch("http://localhost:8080/file", {
                     method: "POST",
+                    headers: authorization,
                     body: formData
                 });
 
@@ -103,6 +107,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
 
                 const response = await fetch("http://localhost:8080/files", {
                     method: "POST",
+                    headers: authorization,
                     body: formData
                 });
 
