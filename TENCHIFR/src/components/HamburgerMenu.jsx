@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Login from "../functions/Login";
 import Register from "../functions/Register";
 
-function HamBurgerMenu({ darkMode }) {
+function HamBurgerMenu({ darkMode, onHistory }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [authMode, setAuthMode] = useState(null);
   const menuRef = useRef(null);
@@ -50,6 +50,16 @@ function HamBurgerMenu({ darkMode }) {
       
       {menuOpen && (
         <div className="absolute right-0 top-full z-50 mt-2 w-44 rounded-xl border border-white/20 bg-black/80 p-1.5 shadow-2xl backdrop-blur-xl">
+          <button
+            onClick={() => {
+              setMenuOpen(false);
+              onHistory?.();
+            }}
+            className="w-full cursor-pointer rounded-lg px-4 py-2 text-left text-sm text-white transition hover:bg-white/15"
+          >
+            History
+          </button>
+
           <button
             onClick={() => {
               setAuthMode("login");

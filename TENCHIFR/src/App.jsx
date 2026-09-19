@@ -13,6 +13,8 @@ import Retrieval from "./components/Retrieval";
 import ScrollButton from "./components/ScrollButton";
 import OAuth from "./auth/OAuth";
 import LightTheme from "./components/LightTheme";
+import History from "./components/History";
+import ProfileAvatar from "./components/ProfileAvatar";
 
 
 function App(){
@@ -20,12 +22,14 @@ function App(){
   const [activeMode, setActiveMode] = useState("text");
   const [files, setFiles] = useState([]);
   const [text, setText] = useState("");
+  const [historyOpen, setHistoryOpen] = useState(false);
   const sendRef = useRef(null);
   const retrieveRef = useRef(null);
   return (
 
     <div className={darkMode ? "relative min-h-screen overflow-hidden bg-black" : "relative min-h-screen overflow-hidden bg-[#F3EBDD]"}>
       <OAuth />
+      <ProfileAvatar darkMode={darkMode} onHistory={() => setHistoryOpen(true)} />
     <div className="absolute top-6 right-6 z-50 flex items-center gap-2">
 
         <div className={darkMode
@@ -36,7 +40,11 @@ function App(){
 
 
         <nav className={darkMode ? "relative ml-auto flex w-fit items-center gap-2 rounded-3xl border border-white/10 bg-white/7 p-2 shadow-lg backdrop-blur-md" : "relative ml-auto flex w-fit items-center gap-2 rounded-3xl border border-black/10 bg-white/30 p-2 shadow-lg backdrop-blur-md"}>
-        <HamBurgerMenu darkMode={darkMode} setDarkMode={setDarkMode} />
+        <HamBurgerMenu
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+          onHistory={() => setHistoryOpen(true)}
+        />
         <Theme darkMode={darkMode} setDarkMode={setDarkMode} />
         </nav>
       </div>
@@ -67,6 +75,9 @@ function App(){
       <Retrieval darkMode={darkMode} />
     </div>
     <ScrollButton darkMode={darkMode} sendRef={sendRef} retrieveRef={retrieveRef} />
+    {historyOpen && (
+      <History darkMode={darkMode} onClose={() => setHistoryOpen(false)} />
+    )}
     </div>
   );
 }

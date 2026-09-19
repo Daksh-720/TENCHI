@@ -10,6 +10,7 @@ function OAuth() {
 
         if(token) {
             localStorage.setItem("token", token);
+            window.dispatchEvent(new Event("tenchi-authenticated"));
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     }, []);
