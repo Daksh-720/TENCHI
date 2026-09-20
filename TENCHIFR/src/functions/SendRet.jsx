@@ -3,25 +3,6 @@ import { useState } from "react";
 import { API_BASE_URL } from "../config";
 import { Copy, Check } from "lucide-react";
 
-const CHARACTERS = "abcxyz0123456789";
-
-function generateInstantCode() {
-    let result = "";
-    const cryptoObj = typeof window !== "undefined" && (window.crypto || window.msCrypto);
-    if (cryptoObj && cryptoObj.getRandomValues) {
-        const values = new Uint32Array(6);
-        cryptoObj.getRandomValues(values);
-        for (let i = 0; i < 6; i++) {
-            result += CHARACTERS.charAt(values[i] % CHARACTERS.length);
-        }
-    } else {
-        for (let i = 0; i < 6; i++) {
-            result += CHARACTERS.charAt(Math.floor(Math.random() * CHARACTERS.length));
-        }
-    }
-    return result;
-}
-
 function SendRet({ text, files, activeMode, darkMode }) {
     const [expiryTime, setExpiryTime] = useState("");
     const [expiryUnit, setExpiryUnit] = useState("minutes");
@@ -77,9 +58,8 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 return;
             }
 
-            // INSTANT CODE GENERATION: runs in < 0.01ms
-            const instantCode = generateInstantCode();
-            setShareCode(instantCode);
+            // Start saving process without displaying unverified code prematurely
+            setShareCode("");
             setLoading(true);
 
             if (activeMode === "text") {
@@ -91,8 +71,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
                     },
                     body: JSON.stringify({
                         content: text,
-                        expiryMinutes: expiryMinutes,
-                        shareCode: instantCode
+                        expiryMinutes: expiryMinutes
                     })
                 });
 
@@ -102,9 +81,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 }
 
                 const data = await response.json();
-                if (data.shareCode && data.shareCode !== instantCode) {
-                    setShareCode(data.shareCode);
-                }
+                setShareCode(data.shareCode);
             }
 
             if (
@@ -118,7 +95,6 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 if (files.length === 1) {
                     formData.append("file", files[0]);
                     formData.append("expiryMinutes", expiryMinutes);
-                    formData.append("shareCode", instantCode);
 
                     const response = await fetch(`${API_BASE_URL}/file`, {
                         method: "POST",
@@ -132,16 +108,13 @@ function SendRet({ text, files, activeMode, darkMode }) {
                     }
 
                     const data = await response.json();
-                    if (data.shareCode && data.shareCode !== instantCode) {
-                        setShareCode(data.shareCode);
-                    }
+                    setShareCode(data.shareCode);
                 } else {
                     files.forEach((file) => {
                         formData.append("files", file);
                     });
 
                     formData.append("expiryMinutes", expiryMinutes);
-                    formData.append("shareCode", instantCode);
 
                     const response = await fetch(`${API_BASE_URL}/files`, {
                         method: "POST",
@@ -155,9 +128,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
                     }
 
                     const data = await response.json();
-                    if (data.shareCode && data.shareCode !== instantCode) {
-                        setShareCode(data.shareCode);
-                    }
+                    setShareCode(data.shareCode);
                 }
             } 
         } catch (err) {
@@ -194,7 +165,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 <div className="relative w-full sm:w-48 md:w-52">
                     <input
                         type="text"
-                        placeholder="Generated-code:"
+                        placeholder={loading ? "Generating code..." : "Generated-code:"}
                         value={shareCode ? `Code: ${shareCode}` : ""}
                         readOnly
                         onClick={handleCopy}
