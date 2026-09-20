@@ -126,7 +126,7 @@ function App(){
           </div>
         </div>
 
-        <div ref={retrieveRef} className="w-full">
+        <div ref={retrieveRef} className="w-full scroll-mt-24 sm:scroll-mt-28">
           <Retrieval darkMode={darkMode} />
         </div>
       </main>
