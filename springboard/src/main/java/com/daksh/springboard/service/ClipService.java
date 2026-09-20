@@ -56,13 +56,19 @@ public class ClipService {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
         }
         clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
+        clip.setShareCode(resolveShareCode(request.getShareCode()));
+        return clipRepository.save(clip);
+    }
 
+    private String resolveShareCode(String candidateCode){
+        if(candidateCode != null && candidateCode.matches("^[a-zA-Z0-9]{6}$") && clipRepository.findByShareCode(candidateCode).isEmpty()){
+            return candidateCode;
+        }
         String shareCode;
         do{
-          shareCode = codeGenerator.generate();
+            shareCode = codeGenerator.generate();
         }while(clipRepository.findByShareCode(shareCode).isPresent());
-        clip.setShareCode(shareCode);
-        return clipRepository.save(clip);
+        return shareCode;
     }
 
     public List<Clip> getAllClips(){
@@ -158,6 +164,10 @@ public class ClipService {
   }
 
   public Clip createFileClip(MultipartFile file, Integer expiryMinutes, User owner){
+    return createFileClip(file, expiryMinutes, null, owner);
+  }
+
+  public Clip createFileClip(MultipartFile file, Integer expiryMinutes, String shareCode, User owner){
     FileInfo fileInfo = saveFile(file);
     Clip clip = new Clip();
     clip.setOwner(owner);
@@ -178,20 +188,20 @@ public class ClipService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
     }
     clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
-    String shareCode;
-    do{
-      shareCode = codeGenerator.generate();
-    }while(clipRepository.findByShareCode(shareCode).isPresent());
-    clip.setShareCode(shareCode);
+    clip.setShareCode(resolveShareCode(shareCode));
     return clipRepository.save(clip);
   }
 
 
   public Clip createMultipleFileClip(MultipartFile[] files, Integer expiryMinutes){
-    return createMultipleFileClip(files, expiryMinutes, null);
+    return createMultipleFileClip(files, expiryMinutes, null, null);
   }
 
   public Clip createMultipleFileClip(MultipartFile[] files, Integer expiryMinutes, User owner){
+    return createMultipleFileClip(files, expiryMinutes, null, owner);
+  }
+
+  public Clip createMultipleFileClip(MultipartFile[] files, Integer expiryMinutes, String shareCode, User owner){
     Clip clip = new Clip();
     clip.setOwner(owner);
     clip.setContentType(ContentType.FILE);
@@ -204,11 +214,7 @@ public class ClipService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
     }
     clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
-    String shareCode;
-    do {
-      shareCode = codeGenerator.generate();
-    }while(clipRepository.findByShareCode(shareCode).isPresent());
-    clip.setShareCode(shareCode);
+    clip.setShareCode(resolveShareCode(shareCode));
     for(MultipartFile file : files){
       FileInfo fileInfo = saveFile(file);
       clipFile clipFile = new clipFile();

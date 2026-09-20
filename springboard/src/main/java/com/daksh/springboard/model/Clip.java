@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import java.time.LocalDateTime;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
@@ -23,6 +24,7 @@ public class Clip {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 
     private Long id;
+    @Column(unique = true, length = 16)
     private String shareCode;
     private String content;
     @Enumerated(EnumType.STRING)

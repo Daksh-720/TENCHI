@@ -111,9 +111,10 @@ public class ClipController {
 
     @PostMapping("/file")
     public ResponseEntity<CreateClipResponse> uploadFile(@RequestParam("file") MultipartFile file,
-                                                         @RequestParam(required = false)Integer expiryMinutes,
+                                                         @RequestParam(required = false) Integer expiryMinutes,
+                                                         @RequestParam(required = false) String shareCode,
                                                          @AuthenticationPrincipal User user){
-        Clip clip = clipService.createFileClip(file, expiryMinutes, user);
+        Clip clip = clipService.createFileClip(file, expiryMinutes, shareCode, user);
         CreateClipResponse response = new CreateClipResponse(clip.getId(), clip.getShareCode(), "File uploaded Successfully!!");
         return ResponseEntity.ok(response);
     }
@@ -122,8 +123,9 @@ public class ClipController {
     @PostMapping("/files")
     public ResponseEntity<CreateClipResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files,
                                                                   @RequestParam(required = false) Integer expiryMinutes,
+                                                                  @RequestParam(required = false) String shareCode,
                                                                   @AuthenticationPrincipal User user){
-        Clip clip = clipService.createMultipleFileClip(files, expiryMinutes, user);
+        Clip clip = clipService.createMultipleFileClip(files, expiryMinutes, shareCode, user);
         CreateClipResponse response = new CreateClipResponse(clip.getId(), clip.getShareCode(), "File uploaded Successfully!!");
         return ResponseEntity.ok(response);
     }
