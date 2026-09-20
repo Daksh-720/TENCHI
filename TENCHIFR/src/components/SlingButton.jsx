@@ -7,8 +7,7 @@ import {
   useMotionValueEvent,
   useReducedMotion
 } from 'motion/react';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowUp02Icon } from '@hugeicons/core-free-icons';
+import { ArrowUp } from 'lucide-react';
 
 const GAP = 4;
 const SLOP = { fine: 4, coarse: 8 };
@@ -470,7 +469,7 @@ export default function SlingButton({
             }}
           >
             <span ref={iconRef} className="inline-flex will-change-transform" style={{ color: iconColor }}>
-              {children ?? <HugeiconsIcon icon={ArrowUp02Icon} size={Math.round(size * 0.4)} strokeWidth={2.2} />}
+              {children ?? <ArrowUp size={Math.round(size * 0.4)} strokeWidth={2.2} />}
             </span>
           </span>
         </button>

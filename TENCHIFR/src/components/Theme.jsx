@@ -1,6 +1,5 @@
 import { useRef } from "react";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Sun02Icon, Moon02Icon } from "@hugeicons/core-free-icons";
+import { Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import SlingButton from "./SlingButton";
 
@@ -62,11 +61,11 @@ function Theme({ darkMode, setDarkMode, onToggleTheme }) {
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="flex items-center justify-center"
           >
-            <HugeiconsIcon
-              icon={darkMode ? Sun02Icon : Moon02Icon}
-              size={19}
-              strokeWidth={2.2}
-            />
+            {darkMode ? (
+              <Sun size={19} strokeWidth={2.2} />
+            ) : (
+              <Moon size={19} strokeWidth={2.2} />
+            )}
           </motion.span>
         </AnimatePresence>
       </SlingButton>

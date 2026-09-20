@@ -22,3 +22,6 @@ pnpm-debug.log*
 Thumbs.db
 *.tmp
 battery-report.html
+
+.vercel
+.env*
