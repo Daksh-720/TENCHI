@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_BASE_URL } from "../config";
 
 
 
@@ -13,8 +14,8 @@ function Retrieval({ darkMode }) {
     function handleDownload(fileId = null){
         const code = shareCode.trim();
         const url = fileId
-              ? `http://localhost:8080/clips/${code}/files/${fileId}/download`
-              : `http://localhost:8080/clips/${code}/download`;
+              ? `${API_BASE_URL}/clips/${code}/files/${fileId}/download`
+              : `${API_BASE_URL}/clips/${code}/download`;
 
               window.open(url, "_blank");
     }
@@ -31,7 +32,7 @@ function Retrieval({ darkMode }) {
 
         try{
             const response = await fetch(
-                `http://localhost:8080/clips/${shareCode.trim()}`
+                `${API_BASE_URL}/clips/${shareCode.trim()}`
             );
 
             if(!response.ok){

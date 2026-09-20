@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { API_BASE_URL } from "../config";
 
 function Login({ setAuthMode }) {
   const [email, setEmail] = useState("");
@@ -9,12 +10,12 @@ function Login({ setAuthMode }) {
 
   function handleGoogleLogin() {
     window.location.href =
-      "http://localhost:8080/oauth2/authorization/google";
+      `${API_BASE_URL}/oauth2/authorization/google`;
   }
 
   function handleGithubLogin() {
     window.location.href =
-      "http://localhost:8080/oauth2/authorization/github";
+      `${API_BASE_URL}/oauth2/authorization/github`;
   }
 
   async function handleLogin(event) {
@@ -23,7 +24,7 @@ function Login({ setAuthMode }) {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8080/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

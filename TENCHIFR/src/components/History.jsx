@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { API_BASE_URL } from "../config";
 
 function History({ darkMode, onClose }) {
     const [clips, setClips] = useState([]);
@@ -15,7 +16,7 @@ function History({ darkMode, onClose }) {
             return;
         }
 
-        fetch("http://localhost:8080/clips/history", {
+        fetch(`${API_BASE_URL}/clips/history`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(async (response) => {

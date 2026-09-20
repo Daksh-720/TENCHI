@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom";
 import { useState } from "react";
+import { API_BASE_URL } from "../config";
 
 
 function Register({ setAuthMode }) {
@@ -26,7 +27,7 @@ async function handleRegister(){
   }
 
 
-  const response = await fetch("http://localhost:8080/auth/register", {
+  const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

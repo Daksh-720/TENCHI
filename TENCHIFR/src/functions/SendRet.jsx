@@ -1,5 +1,6 @@
 import SetExpiry from "./SetExpiry";
 import { useState } from "react";
+import { API_BASE_URL } from "../config";
 
 
 
@@ -51,7 +52,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
 
         
         if (activeMode === "text") {
-            const response = await fetch("http://localhost:8080/clips", {
+            const response = await fetch(`${API_BASE_URL}/clips`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -84,7 +85,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 formData.append("file", files[0]);
                 formData.append("expiryMinutes", expiryMinutes);
 
-                const response = await fetch("http://localhost:8080/file", {
+                const response = await fetch(`${API_BASE_URL}/file`, {
                     method: "POST",
                     headers: authorization,
                     body: formData
@@ -105,7 +106,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
 
                 formData.append("expiryMinutes", expiryMinutes);
 
-                const response = await fetch("http://localhost:8080/files", {
+                const response = await fetch(`${API_BASE_URL}/files`, {
                     method: "POST",
                     headers: authorization,
                     body: formData
