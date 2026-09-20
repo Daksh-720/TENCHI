@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -26,6 +27,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
+
+    @Value("${app.frontend.url:http://localhost:5173}")
+    private String frontendUrl;
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
@@ -92,7 +96,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             }
 
             String token = jwtService.generateToken(user.getEmail());
-            response.sendRedirect("http://localhost:5173?token=" + token);
+            response.sendRedirect(frontendUrl + "?token=" + token);
     }
 
     private String fetchGithubEmail(OAuth2AuthenticationToken oauthToken) {
