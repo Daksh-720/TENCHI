@@ -47,46 +47,55 @@ function App(){
         onComplete={() => setThemeTransition(null)}
       />
       <OAuth />
-      <div className="fixed top-6 left-6 z-50 flex items-center gap-3">
-        <ProfileAvatar darkMode={darkMode} onHistory={() => setHistoryOpen(true)} />
-        <div
-          className={`flex h-11 items-center whitespace-nowrap rounded-full border px-4 text-base backdrop-blur-md transition-all duration-700 ease-in-out ${
-            darkMode
-              ? "border-white/50 bg-black/40 text-white text-xs"
-              : "border-black/50 bg-white/70 text-black text-xs shadow-md"
-          }`}
-        >
-          Online Data Sharing Platform
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-3 sm:p-5 md:p-6 pointer-events-none">
+        <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
+          <ProfileAvatar darkMode={darkMode} onHistory={() => setHistoryOpen(true)} />
+          <div
+            className={`hidden md:flex h-10 sm:h-11 items-center whitespace-nowrap rounded-full border px-3 sm:px-4 text-xs backdrop-blur-md transition-all duration-700 ease-in-out ${
+              darkMode
+                ? "border-white/50 bg-black/40 text-white"
+                : "border-black/50 bg-white/70 text-black shadow-md"
+            }`}
+          >
+            Online Data Sharing Platform
+          </div>
+          <div
+            className={`sm:hidden whitespace-nowrap rounded-xl border px-3 py-1.5 text-sm font-bold tracking-[0.2em] backdrop-blur-md transition-all duration-700 ease-in-out ${
+              darkMode
+                ? "border-white/50 bg-black/40 text-white"
+                : "border-black/50 bg-white/70 text-black shadow-md"
+            }`}
+          >
+            ＴΞNCHI
+          </div>
         </div>
-      </div>
 
-      <div className="fixed top-6 right-6 z-50 flex items-center gap-4">
-        <div
-          className={`whitespace-nowrap rounded-xl border px-4 py-2 text-lg font-bold tracking-[0.3em] backdrop-blur-md transition-all duration-700 ease-in-out ${
+        <div className="flex items-center gap-2 sm:gap-4 pointer-events-auto">
+          <div
+            className={`hidden sm:block whitespace-nowrap rounded-xl border px-3.5 py-1.5 sm:px-4 sm:py-2 text-base md:text-lg font-bold tracking-[0.25em] sm:tracking-[0.3em] backdrop-blur-md transition-all duration-700 ease-in-out ${
+              darkMode
+                ? "border-white/50 bg-black/40 text-white"
+                : "border-black/50 bg-white/70 text-black shadow-md"
+            }`}
+          >
+            ＴΞNCHI
+          </div>
+
+          <nav className={`relative flex items-center gap-1.5 sm:gap-2 rounded-2xl sm:rounded-3xl border p-1.5 sm:p-2 shadow-lg backdrop-blur-md transition-all duration-700 ease-in-out ${
             darkMode
-              ? "border-white/50 bg-black/40 text-white"
-              : "border-black/50 bg-white/70 text-black shadow-md"
-          }`}
-        >
-          ＴΞNCHI
+              ? "border-white/10 bg-white/7"
+              : "border-black/10 bg-white/30"
+          }`}>
+            <HamBurgerMenu
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+              onHistory={() => setHistoryOpen(true)}
+            />
+            <Theme darkMode={darkMode} setDarkMode={setDarkMode} onToggleTheme={handleToggleTheme} />
+          </nav>
         </div>
+      </header>
 
-
-        <nav className={`relative ml-auto flex w-fit items-center gap-2 rounded-3xl border p-2 shadow-lg backdrop-blur-md transition-all duration-700 ease-in-out ${
-          darkMode
-            ? "border-white/10 bg-white/7"
-            : "border-black/10 bg-white/30"
-        }`}>
-        <HamBurgerMenu
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-          onHistory={() => setHistoryOpen(true)}
-        />
-        <Theme darkMode={darkMode} setDarkMode={setDarkMode} onToggleTheme={handleToggleTheme} />
-        </nav>
-      </div>
-
-    
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div
           className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${darkMode ? "opacity-100" : "opacity-0"}`}
@@ -102,26 +111,25 @@ function App(){
         </div>
       </div>
 
-
-    <div ref={sendRef} className="mt-34 flex justify-center gap-3 ">
-
-      
-       <div className="relative">
-            <div className="mt-1 flex justify-center gap-3">
-                <Text activeMode={activeMode} setActiveMode={setActiveMode} darkMode={darkMode} />
-                <Filess activeMode={activeMode} setActiveMode={setActiveMode} files={files} setFiles={setFiles} darkMode={darkMode} />
-                <Folder activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} darkMode={darkMode} />
-                <Image activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} darkMode={darkMode} />
-                <Video activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} darkMode={darkMode} />
+      <main className="relative z-10 pt-20 sm:pt-24 md:pt-28 pb-16 px-3 sm:px-4 flex flex-col items-center">
+        <div ref={sendRef} className="w-full flex justify-center">
+          <div className="w-full flex flex-col items-center">
+            <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2.5 md:gap-3">
+              <Text activeMode={activeMode} setActiveMode={setActiveMode} darkMode={darkMode} />
+              <Filess activeMode={activeMode} setActiveMode={setActiveMode} files={files} setFiles={setFiles} darkMode={darkMode} />
+              <Folder activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} darkMode={darkMode} />
+              <Image activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} darkMode={darkMode} />
+              <Video activeMode={activeMode} setActiveMode={setActiveMode} setFiles={setFiles} darkMode={darkMode} />
             </div>
 
             <ActivePanel activeMode={activeMode} files={files} text={text} setText={setText} darkMode={darkMode} />
+          </div>
         </div>
 
-    </div>
-    <div ref={retrieveRef}>
-      <Retrieval darkMode={darkMode} />
-    </div>
+        <div ref={retrieveRef} className="w-full">
+          <Retrieval darkMode={darkMode} />
+        </div>
+      </main>
     <ScrollButton darkMode={darkMode} sendRef={sendRef} retrieveRef={retrieveRef} />
     {historyOpen && (
       <History darkMode={darkMode} onClose={() => setHistoryOpen(false)} />

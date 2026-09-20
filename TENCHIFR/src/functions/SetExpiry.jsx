@@ -33,8 +33,8 @@ function SetExpiry(props){
                 onClick={() => setShowTimer(!showTimer)}
                 className={
                     darkMode
-                        ? "flex cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-1 text-white backdrop-blur-md transition hover:bg-white/20"
-                        : "flex cursor-pointer items-center gap-2 rounded-xl border border-black/20 bg-white/50 px-6 py-1 text-black backdrop-blur-md transition hover:bg-white/70"
+                        ? "flex h-12 w-full sm:w-auto cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-md transition hover:bg-white/20"
+                        : "flex h-12 w-full sm:w-auto cursor-pointer items-center justify-center gap-2 rounded-xl border border-black/20 bg-white/50 px-5 py-2.5 text-sm font-medium text-black backdrop-blur-md transition hover:bg-white/70"
                 }
             >
                 <Timer size={18} />
@@ -42,7 +42,7 @@ function SetExpiry(props){
             </button>
 
             {showTimer && (
-                <div className="absolute left-0 top-12 z-50 w-64 rounded-xl border border-white/20 bg-black/70 p-4 backdrop-blur-xl">
+                <div className="absolute left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0 top-14 z-50 w-64 max-w-[88vw] rounded-xl border border-white/20 bg-black/85 p-4 backdrop-blur-xl shadow-2xl">
 
                     <p className="mb-3 text-sm text-white/70">
                         Expire after

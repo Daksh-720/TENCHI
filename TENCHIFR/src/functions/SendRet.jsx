@@ -129,47 +129,48 @@ function SendRet({ text, files, activeMode, darkMode }) {
     } 
     
     return(
-        <div className={darkMode ? "flex flex-col items-center gap-2":"flex flex-col items-center gap-2"}>
-
-        <div className={darkMode ? "flex items-center gap-4":"flex items-center gap-4"}>
+        <div className="flex w-full flex-col items-center gap-2">
+            <div className="flex w-full flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 md:gap-4">
                 <button
-                     type="button"
-                     onClick={handleSend}
-                     className={
+                    type="button"
+                    onClick={handleSend}
+                    className={
                         darkMode
-                                ? "rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer"
-                                : "rounded-xl border-3 border-[#00D2FF]/90 bg-[#737FF2]/40 px-8 py-3 text-turquoise backdrop-blur-md transition hover:bg-[#454C91]/40 hover:text-white hover:backdrop-blur-xl cursor-pointer"
-                     }>
-                 SEND
+                            ? "h-12 w-full sm:w-auto rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 font-semibold text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer"
+                            : "h-12 w-full sm:w-auto rounded-xl border-2 border-[#00D2FF]/90 bg-[#737FF2]/40 px-8 py-3 font-semibold text-turquoise backdrop-blur-md transition hover:bg-[#454C91]/40 hover:text-white hover:backdrop-blur-xl cursor-pointer"
+                    }
+                >
+                    SEND
                 </button>
 
-        <input
-        type="text"
-        placeholder="Generated-code:"
-        value={shareCode}
-        readOnly
-        className={
-            darkMode
-                ? "h-12 w-48 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white backdrop-blur-md"
-                : "h-12 w-48 rounded-xl border border-black/20 bg-white/50 px-4 py-3 text-black backdrop-blur-md"
-        }
-        />
+                <input
+                    type="text"
+                    placeholder="Generated-code:"
+                    value={shareCode}
+                    readOnly
+                    className={
+                        darkMode
+                            ? "h-12 w-full sm:w-44 md:w-48 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-center sm:text-left text-white backdrop-blur-md"
+                            : "h-12 w-full sm:w-44 md:w-48 rounded-xl border border-black/20 bg-white/50 px-4 py-3 text-center sm:text-left text-black backdrop-blur-md"
+                    }
+                />
 
-        <SetExpiry 
-        expiryTime={expiryTime}
-        setExpiryTime={setExpiryTime}
-        expiryUnit={expiryUnit}
-        setExpiryUnit={setExpiryUnit}
-        darkMode={darkMode}
-        />
+                <div className="w-full sm:w-auto flex justify-center">
+                    <SetExpiry 
+                        expiryTime={expiryTime}
+                        setExpiryTime={setExpiryTime}
+                        expiryUnit={expiryUnit}
+                        setExpiryUnit={setExpiryUnit}
+                        darkMode={darkMode}
+                    />
+                </div>
+            </div>
 
-        </div>
-
-        {error && (
-            <p className="text-sm text-red-400">
-                {error}
-            </p>
-        )}
+            {error && (
+                <p className="text-sm text-red-400 text-center">
+                    {error}
+                </p>
+            )}
         </div>
     );
 }
