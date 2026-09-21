@@ -3,6 +3,58 @@ import { useState } from "react";
 import { API_BASE_URL } from "../config";
 import { Copy, Check } from "lucide-react";
 
+const CHARACTERS = "abcxyz0123456789";
+
+function generateInstantCode() {
+    let result = "";
+    const cryptoObj = typeof window !== "undefined" && (window.crypto || window.msCrypto);
+    if (cryptoObj && cryptoObj.getRandomValues) {
+        const values = new Uint32Array(6);
+        cryptoObj.getRandomValues(values);
+        for (let i = 0; i < 6; i++) {
+            result += CHARACTERS.charAt(values[i] % CHARACTERS.length);
+        }
+    } else {
+        for (let i = 0; i < 6; i++) {
+            result += CHARACTERS.charAt(Math.floor(Math.random() * CHARACTERS.length));
+        }
+    }
+    return result;
+}
+
+function uploadWithProgress(url, formData, headers, onProgress) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        if (headers) {
+            Object.entries(headers).forEach(([key, value]) => {
+                xhr.setRequestHeader(key, value);
+            });
+        }
+        if (xhr.upload && onProgress) {
+            xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable && e.total > 0) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    onProgress(percent);
+                }
+            };
+        }
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    resolve(JSON.parse(xhr.responseText));
+                } catch {
+                    resolve({ message: xhr.responseText });
+                }
+            } else {
+                reject(new Error(xhr.responseText || `Upload failed (${xhr.status})`));
+            }
+        };
+        xhr.onerror = () => reject(new Error("Network connection error during upload."));
+        xhr.send(formData);
+    });
+}
+
 function SendRet({ text, files, activeMode, darkMode }) {
     const [expiryTime, setExpiryTime] = useState("");
     const [expiryUnit, setExpiryUnit] = useState("minutes");
@@ -10,6 +62,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [progress, setProgress] = useState(null);
 
     async function handleCopy() {
         if (!shareCode) return;
@@ -58,9 +111,11 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 return;
             }
 
-            // Start saving process without displaying unverified code prematurely
-            setShareCode("");
+            // INSTANT CODE GENERATION: runs in < 0.01ms so the user has the code right away
+            const instantCode = generateInstantCode();
+            setShareCode(instantCode);
             setLoading(true);
+            setProgress(0);
 
             if (activeMode === "text") {
                 const response = await fetch(`${API_BASE_URL}/clips`, {
@@ -71,7 +126,8 @@ function SendRet({ text, files, activeMode, darkMode }) {
                     },
                     body: JSON.stringify({
                         content: text,
-                        expiryMinutes: expiryMinutes
+                        expiryMinutes: expiryMinutes,
+                        shareCode: instantCode
                     })
                 });
 
@@ -81,7 +137,9 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 }
 
                 const data = await response.json();
-                setShareCode(data.shareCode);
+                if (data.shareCode) {
+                    setShareCode(data.shareCode);
+                }
             }
 
             if (
@@ -95,40 +153,36 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 if (files.length === 1) {
                     formData.append("file", files[0]);
                     formData.append("expiryMinutes", expiryMinutes);
+                    formData.append("shareCode", instantCode);
 
-                    const response = await fetch(`${API_BASE_URL}/file`, {
-                        method: "POST",
-                        headers: authorization,
-                        body: formData
-                    });
+                    const data = await uploadWithProgress(
+                        `${API_BASE_URL}/file`,
+                        formData,
+                        authorization,
+                        (p) => setProgress(p)
+                    );
 
-                    if (!response.ok) {
-                        const message = await response.text();
-                        throw new Error(message || `Upload failed (${response.status})`);
+                    if (data.shareCode) {
+                        setShareCode(data.shareCode);
                     }
-
-                    const data = await response.json();
-                    setShareCode(data.shareCode);
                 } else {
                     files.forEach((file) => {
                         formData.append("files", file);
                     });
 
                     formData.append("expiryMinutes", expiryMinutes);
+                    formData.append("shareCode", instantCode);
 
-                    const response = await fetch(`${API_BASE_URL}/files`, {
-                        method: "POST",
-                        headers: authorization,
-                        body: formData
-                    });
+                    const data = await uploadWithProgress(
+                        `${API_BASE_URL}/files`,
+                        formData,
+                        authorization,
+                        (p) => setProgress(p)
+                    );
 
-                    if (!response.ok) {
-                        const message = await response.text();
-                        throw new Error(message || `Upload failed (${response.status})`);
+                    if (data.shareCode) {
+                        setShareCode(data.shareCode);
                     }
-
-                    const data = await response.json();
-                    setShareCode(data.shareCode);
                 }
             } 
         } catch (err) {
@@ -136,6 +190,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
             setShareCode("");
         } finally {
             setLoading(false);
+            setProgress(null);
         }
     } 
 
@@ -148,14 +203,18 @@ function SendRet({ text, files, activeMode, darkMode }) {
                     onClick={handleSend}
                     className={
                         darkMode
-                            ? "h-12 w-full sm:w-auto rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 font-semibold text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer disabled:opacity-75 disabled:cursor-wait"
-                            : "h-12 w-full sm:w-auto rounded-xl border-2 border-[#00D2FF]/90 bg-[#737FF2]/40 px-8 py-3 font-semibold text-turquoise backdrop-blur-md transition hover:bg-[#454C91]/40 hover:text-white hover:backdrop-blur-xl cursor-pointer disabled:opacity-75 disabled:cursor-wait"
+                            ? "h-12 w-full sm:w-auto rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 font-semibold text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer disabled:opacity-85 disabled:cursor-wait"
+                            : "h-12 w-full sm:w-auto rounded-xl border-2 border-[#00D2FF]/90 bg-[#737FF2]/40 px-8 py-3 font-semibold text-turquoise backdrop-blur-md transition hover:bg-[#454C91]/40 hover:text-white hover:backdrop-blur-xl cursor-pointer disabled:opacity-85 disabled:cursor-wait"
                     }
                 >
                     {loading ? (
                         <span className="flex items-center justify-center gap-2">
                             <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                            <span>SAVING...</span>
+                            <span>
+                                {progress !== null && progress > 0 && progress < 100
+                                    ? `UPLOADING ${progress}%`
+                                    : "SAVING..."}
+                            </span>
                         </span>
                     ) : (
                         "SEND"
@@ -206,6 +265,12 @@ function SendRet({ text, files, activeMode, darkMode }) {
                     />
                 </div>
             </div>
+
+            {loading && shareCode && (
+                <p className="text-xs text-cyan-400 font-medium animate-pulse">
+                    Code ready! Uploading in background...
+                </p>
+            )}
 
             {copied && (
                 <p className="text-xs text-emerald-400 font-medium animate-pulse">
