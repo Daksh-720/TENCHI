@@ -67,7 +67,6 @@ function App(){
                 : "border-black/50 bg-white/70 text-black shadow-md"
             }`}
           >
-            <img src={logo} alt="tenchi-data logo" className="h-4 w-4 sm:h-5 sm:w-5 object-contain" />
             <span>ＴΞNCHI-DATA</span>
           </div>
         </div>
