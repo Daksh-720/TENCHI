@@ -22,7 +22,7 @@ export default function ThemeTransition({ transition, onComplete }) {
   }, [origin]);
 
   const particles = useMemo(() => {
-    const count = 48;
+    const count = 20;
     const darkPalettes = [
       { primary: '#00D2FF', secondary: '#0284C7', glow: '#38BDF8' },
       { primary: '#737FF2', secondary: '#4338CA', glow: '#818CF8' },
@@ -124,11 +124,11 @@ export default function ThemeTransition({ transition, onComplete }) {
             height: maxRadius * 2,
             willChange: 'transform, opacity',
             boxShadow: toDark
-              ? '0 0 45px 12px rgba(0, 210, 255, 0.85), inset 0 0 30px 6px rgba(115, 127, 242, 0.7)'
-              : '0 0 50px 14px rgba(251, 146, 60, 0.85), inset 0 0 35px 6px rgba(245, 235, 221, 0.8)',
+              ? '0 0 24px 6px rgba(0, 210, 255, 0.7)'
+              : '0 0 24px 6px rgba(251, 146, 60, 0.7)',
             border: toDark
-              ? '2.5px solid rgba(0, 210, 255, 0.95)'
-              : '2.5px solid rgba(253, 186, 116, 0.95)',
+              ? '2px solid rgba(0, 210, 255, 0.9)'
+              : '2px solid rgba(253, 186, 116, 0.9)',
           }}
           initial={{
             scale: 0,
@@ -139,7 +139,7 @@ export default function ThemeTransition({ transition, onComplete }) {
             opacity: [1, 0.85, 0],
           }}
           transition={{
-            duration: 0.78,
+            duration: 0.75,
             ease: [0.16, 1, 0.3, 1],
           }}
         />
@@ -154,11 +154,11 @@ export default function ThemeTransition({ transition, onComplete }) {
             height: maxRadius * 1.6,
             willChange: 'transform, opacity',
             boxShadow: toDark
-              ? '0 0 25px 6px rgba(167, 139, 250, 0.6)'
-              : '0 0 30px 8px rgba(244, 114, 182, 0.5)',
+              ? '0 0 16px 4px rgba(167, 139, 250, 0.5)'
+              : '0 0 16px 4px rgba(244, 114, 182, 0.45)',
             border: toDark
-              ? '1.5px solid rgba(167, 139, 250, 0.7)'
-              : '1.5px solid rgba(251, 146, 60, 0.6)',
+              ? '1.5px solid rgba(167, 139, 250, 0.6)'
+              : '1.5px solid rgba(251, 146, 60, 0.55)',
           }}
           initial={{
             scale: 0,
@@ -169,7 +169,7 @@ export default function ThemeTransition({ transition, onComplete }) {
             opacity: [0.9, 0.6, 0],
           }}
           transition={{
-            duration: 0.7,
+            duration: 0.68,
             delay: 0.05,
             ease: [0.16, 1, 0.3, 1],
           }}
@@ -189,8 +189,8 @@ export default function ThemeTransition({ transition, onComplete }) {
               marginTop: -p.size / 2,
               willChange: 'transform, opacity',
               background: `radial-gradient(circle at 32% 28%, #ffffff 0%, ${p.primary} 48%, ${p.secondary} 100%)`,
-              boxShadow: `0 0 ${p.glow}px ${p.glowColor}, inset 0 2px 4px rgba(255, 255, 255, 0.75), 0 4px 14px rgba(0, 0, 0, 0.35)`,
-              border: '1px solid rgba(255, 255, 255, 0.4)',
+              boxShadow: `0 0 ${p.glow}px ${p.glowColor}`,
+              border: '1px solid rgba(255, 255, 255, 0.5)',
             }}
             initial={{
               x: 0,

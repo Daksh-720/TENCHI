@@ -38,7 +38,7 @@ uniform float uLightMode;
 
 varying vec2 vUv;
 
-#define NUM_LAYER 4.0
+#define NUM_LAYER 3.0
 #define STAR_COLOR_CUTOFF 0.2
 #define MAT45 mat2(0.7071, -0.7071, 0.7071, 0.7071)
 #define PERIOD 3.0
@@ -219,7 +219,9 @@ function Galaxy({
   const targetMouseActive = useRef(0.0);
   const smoothMouseActive = useRef(0.0);
   const pausedRef = useRef(paused);
-  pausedRef.current = paused;
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
   const loopControllerRef = useRef(null);
 
   useEffect(() => {
@@ -236,9 +238,15 @@ function Galaxy({
 
     const ctn = ctnDom.current;
 
+    const dpr = Math.min(typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1, 1.25);
     const renderer = new Renderer({
       alpha: transparent,
-      premultipliedAlpha: false
+      premultipliedAlpha: false,
+      dpr,
+      powerPreference: 'high-performance',
+      depth: false,
+      stencil: false,
+      antialias: false
     });
 
     const gl = renderer.gl;
@@ -254,13 +262,19 @@ function Galaxy({
     }
 
     let program;
+    let cachedRect = null;
+
+    function updateRect() {
+      if (ctn) {
+        cachedRect = ctn.getBoundingClientRect();
+      }
+    }
 
     function resize() {
-      const scale = 1;
-
+      updateRect();
       renderer.setSize(
-        ctn.offsetWidth * scale,
-        ctn.offsetHeight * scale
+        ctn.offsetWidth,
+        ctn.offsetHeight
       );
 
       if (program) {
@@ -272,7 +286,7 @@ function Galaxy({
       }
     }
 
-    window.addEventListener('resize', resize, false);
+    window.addEventListener('resize', resize, { passive: true });
     resize();
 
     const geometry = new Triangle(gl);
@@ -442,7 +456,8 @@ function Galaxy({
 
     function handleMouseMove(e) {
       if (pausedRef.current) return;
-      const rect = ctn.getBoundingClientRect();
+      if (!cachedRect) updateRect();
+      const rect = cachedRect;
 
       const x =
         (e.clientX - rect.left) / rect.width;
@@ -463,12 +478,14 @@ function Galaxy({
     if (mouseInteraction) {
       ctn.addEventListener(
         'mousemove',
-        handleMouseMove
+        handleMouseMove,
+        { passive: true }
       );
 
       ctn.addEventListener(
         'mouseleave',
-        handleMouseLeave
+        handleMouseLeave,
+        { passive: true }
       );
     }
 

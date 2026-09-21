@@ -6,14 +6,21 @@ function ScrollButton({ darkMode, sendRef, retrieveRef }) {
     const [selected, setSelected] = useState("Send");
 
     useEffect(() => {
+        let ticking = false;
+
         function handleScroll() {
-            if (!retrieveRef?.current) return;
-            const rect = retrieveRef.current.getBoundingClientRect();
-            if (rect.top <= window.innerHeight * 0.5) {
-                setSelected("Retrieve");
-            } else {
-                setSelected("Send");
-            }
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                ticking = false;
+                if (!retrieveRef?.current) return;
+                const rect = retrieveRef.current.getBoundingClientRect();
+                if (rect.top <= window.innerHeight * 0.5) {
+                    setSelected("Retrieve");
+                } else {
+                    setSelected("Send");
+                }
+            });
         }
 
         window.addEventListener("scroll", handleScroll, { passive: true });

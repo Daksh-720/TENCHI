@@ -80,13 +80,16 @@ function RubberSegment({
                 className={vertical ? "absolute inset-x-1 top-1" : "absolute inset-y-1 left-1"}
                 animate={vertical ? {
                     y: `calc(${selectedIndex * 100}% + ${selectedIndex * 4}px)`,
-                    height: `calc((100% - ${(normalizedItems.length - 1) * 4}px) / ${normalizedItems.length})`,
                 } : {
                     x: `calc(${selectedIndex * 100}% + ${selectedIndex * 4}px)`,
-                    width: `calc((100% - ${(normalizedItems.length - 1) * 4}px) / ${normalizedItems.length})`,
                 }}
-                transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                style={{ borderRadius: Math.max(0, radius - 3), background: thumbColor }}
+                transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                style={{
+                    borderRadius: Math.max(0, radius - 3),
+                    background: thumbColor,
+                    height: vertical ? `calc((100% - ${(normalizedItems.length - 1) * 4}px) / ${normalizedItems.length})` : undefined,
+                    width: !vertical ? `calc((100% - ${(normalizedItems.length - 1) * 4}px) / ${normalizedItems.length})` : undefined,
+                }}
             />
             {normalizedItems.map((item, index) => (
                 <button

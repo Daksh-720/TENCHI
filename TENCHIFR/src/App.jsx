@@ -16,6 +16,7 @@ import OAuth from "./auth/OAuth";
 import LightTheme from "./components/LightTheme";
 import History from "./components/History";
 import ProfileAvatar from "./components/ProfileAvatar";
+import logo from "./assets/logo.png";
 
 
 function App(){
@@ -41,7 +42,7 @@ function App(){
   const isGalaxyActive = darkMode || themeTransition !== null;
 
   return (
-    <div className={`relative min-h-screen overflow-hidden transition-colors duration-700 ease-in-out ${darkMode ? "bg-black text-white" : "bg-[#F3EBDD] text-black"}`}>
+    <div className={`relative min-h-screen overflow-hidden transition-colors duration-500 ease-in-out ${darkMode ? "bg-black text-white" : "bg-[#F3EBDD] text-black"}`}>
       <ThemeTransition
         transition={themeTransition}
         onComplete={() => setThemeTransition(null)}
@@ -51,7 +52,7 @@ function App(){
         <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
           <ProfileAvatar darkMode={darkMode} onHistory={() => setHistoryOpen(true)} />
           <div
-            className={`hidden md:flex h-10 sm:h-11 items-center whitespace-nowrap rounded-full border px-3 sm:px-4 text-xs backdrop-blur-md transition-all duration-700 ease-in-out ${
+            className={`hidden md:flex h-10 sm:h-11 items-center whitespace-nowrap rounded-full border px-3 sm:px-4 text-xs backdrop-blur-md transition-[background-color,border-color,color,box-shadow] duration-500 ease-in-out ${
               darkMode
                 ? "border-white/50 bg-black/40 text-white"
                 : "border-black/50 bg-white/70 text-black shadow-md"
@@ -60,28 +61,30 @@ function App(){
             Online Data Sharing Platform
           </div>
           <div
-            className={`sm:hidden whitespace-nowrap rounded-xl border px-3 py-1.5 text-sm font-bold tracking-[0.2em] backdrop-blur-md transition-all duration-700 ease-in-out ${
+            className={`sm:hidden flex items-center gap-1.5 whitespace-nowrap rounded-xl border px-2.5 py-1.5 text-xs sm:text-sm font-bold tracking-[0.15em] backdrop-blur-md transition-[background-color,border-color,color,box-shadow] duration-500 ease-in-out ${
               darkMode
                 ? "border-white/50 bg-black/40 text-white"
                 : "border-black/50 bg-white/70 text-black shadow-md"
             }`}
           >
-            ＴΞNCHI
+            <img src={logo} alt="tenchi-data logo" className="h-4 w-4 sm:h-5 sm:w-5 object-contain" />
+            <span>ＴΞNCHI-DATA</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4 pointer-events-auto">
           <div
-            className={`hidden sm:block whitespace-nowrap rounded-xl border px-3.5 py-1.5 sm:px-4 sm:py-2 text-base md:text-lg font-bold tracking-[0.25em] sm:tracking-[0.3em] backdrop-blur-md transition-all duration-700 ease-in-out ${
+            className={`hidden sm:flex items-center gap-2.5 whitespace-nowrap rounded-xl border px-3.5 py-1.5 sm:px-4 sm:py-2 text-base md:text-lg font-bold tracking-[0.2em] sm:tracking-[0.25em] backdrop-blur-md transition-[background-color,border-color,color,box-shadow] duration-500 ease-in-out ${
               darkMode
                 ? "border-white/50 bg-black/40 text-white"
                 : "border-black/50 bg-white/70 text-black shadow-md"
             }`}
           >
-            ＴΞNCHI
+            <img src={logo} alt="tenchi-data logo" className="h-6 w-6 sm:h-7 sm:w-7 object-contain" />
+            <span>ＴΞNCHI-DATA</span>
           </div>
 
-          <nav className={`relative flex items-center gap-1.5 sm:gap-2 rounded-2xl sm:rounded-3xl border p-1.5 sm:p-2 shadow-lg backdrop-blur-md transition-all duration-700 ease-in-out ${
+          <nav className={`relative flex items-center gap-1.5 sm:gap-2 rounded-2xl sm:rounded-3xl border p-1.5 sm:p-2 shadow-lg backdrop-blur-md transition-[background-color,border-color] duration-500 ease-in-out ${
             darkMode
               ? "border-white/10 bg-white/7"
               : "border-black/10 bg-white/30"
