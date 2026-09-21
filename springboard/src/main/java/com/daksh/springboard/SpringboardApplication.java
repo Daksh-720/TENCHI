@@ -1,7 +1,10 @@
 package com.daksh.springboard;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.File;
@@ -16,6 +19,18 @@ public class SpringboardApplication {
 	public static void main(String[] args) {
 		loadEnv();
 		SpringApplication.run(SpringboardApplication.class, args);
+	}
+
+	@Bean
+	public CommandLineRunner updateSchema(JdbcTemplate jdbcTemplate) {
+		return args -> {
+			try {
+				jdbcTemplate.execute("ALTER TABLE clip MODIFY COLUMN content LONGTEXT");
+				System.out.println("[DB] Upgraded clip.content column to LONGTEXT");
+			} catch (Exception e) {
+				// Handled gracefully if table does not exist or database dialect differs
+			}
+		};
 	}
 
 	private static void loadEnv() {

@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
 import java.time.LocalDateTime;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
@@ -26,6 +27,9 @@ public class Clip {
     private Long id;
     @Column(unique = true, length = 16)
     private String shareCode;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
     @Enumerated(EnumType.STRING)
     private ContentType contentType;
