@@ -11,9 +11,6 @@ Whether you need to paste a quick text snippet or drop a batch of files, **ＴΞ
 ## 📋 Table of Contents
 - [✨ Features]
 - [🛠 Tech Stack]
-- [📂 Project Structure]
-- [🔌 API]
-- [💻 Running Locally]
 - [📜 License]
 
 ---
