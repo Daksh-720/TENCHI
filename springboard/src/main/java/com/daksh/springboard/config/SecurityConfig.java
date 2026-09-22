@@ -45,6 +45,7 @@ public class SecurityConfig {
         .cors(cors -> {})
         .authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+        .requestMatchers("/", "/health", "/ping").permitAll()
         .requestMatchers("/auth/**").permitAll()
         .requestMatchers("/clips/history").authenticated()
         .requestMatchers("/clips", "/clips/**").permitAll()
