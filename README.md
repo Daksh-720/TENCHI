@@ -1,42 +1,60 @@
-ＴΞNCHI-DATA
+# 🌌 ＴΞNCHI-DATA
 
-An online clipboard and file-sharing platform — paste text or drop files, get a short share code (or link), and share it with anyone. Inspired by tools like online-clipboard.online.
+**An ultra-fast, seamless online clipboard and file-sharing platform.**  
 
-Live app: https://tenchi-data.vercel.app/
+Whether you need to paste a quick text snippet or drop a batch of files, **ＴΞNCHI-DATA** generates a short, unique code so you can share it with anyone—instantly. Inspired by minimalist tools like *online-clipboard.online*, but elevated with a modern tech stack and an immersive UI.
 
-📋 Table of contents
-Features
-Tech stack
-Project structure
-API overview
-Running locally
-License
-✨ Features
-🔗 Sharing
-Share plain text, images, videos, or files instantly via a short, unique share code
-Upload a single file or multiple files in one clip
-Retrieve any clip by entering its share code
-⏳ Expiry & cleanup
-Set a custom expiry — anywhere from 1 minute to 2 days
-Expired clips are auto-deleted by a scheduled cleanup job
-👤 Accounts
-Sign up / log in with email + password, or with Google OAuth2
-Logged-in users get a saved history of their past clips
-🎨 UI
-Light/dark theme toggle
-Animated galaxy background with smooth theme-transition effects
+🚀 **[Experience the Live App Here](https://tenchi-data.vercel.app)**
 
-🛠 Tech stack
-Frontend	
-Framework	React 19 + Vite
-Styling	Tailwind CSS 4
-Animation	Framer Motion (motion), ogl for the WebGL galaxy background
-Hosting	Vercel
+---
 
-Backend	
-Framework	Java 21 + Spring Boot
-Auth	Spring Security with JWT, plus Google OAuth2 login
-Persistence	Spring Data JPA + MySQL
-File storage	Local filesystem (path referenced in the database)
-Background jobs	Scheduled cleanup service purges expired clips every minute
-Deployment	Dockerized
+## 📋 Table of Contents
+- [✨ Features]
+- [🛠 Tech Stack]
+- [📂 Project Structure]
+- [🔌 API]
+- [💻 Running Locally]
+- [📜 License]
+
+---
+
+## ✨ Features
+
+### 🔗 Frictionless Sharing
+* **Universal Support:** Share plain text, high-res images, videos, or complex file types in seconds.
+* **Batch Uploads:** Drop a single file or a massive batch into a single, unified "clip."
+* **Instant Retrieval:** Pull up any clip on any device simply by entering its unique share code.
+
+### ⏳ Ephemeral Storage
+* **Custom Expiry:** You control the lifespan. Set clips to self-destruct anywhere from 1 minute to 48 hours.
+* **Automated Cleanup:** A scheduled background worker automatically purges expired clips every minute to keep the ecosystem clean and fast.
+
+### 👤 Smart Accounts
+* **Flexible Authentication:** Sign up securely via Email/Password or jump right in using **Google OAuth2**.
+* **Personalized History:** Logged-in users gain access to a saved ledger of their past clips for easy reference and retrieval.
+
+### 🎨 Immersive UI
+* **Dynamic Theming:** Seamless light and dark mode toggling.
+* **Stellar Visuals:** Features a stunning, interactive WebGL animated galaxy background with buttery-smooth theme transitions.
+
+---
+
+## 🛠 Tech Stack
+
+### 💻 Frontend
+| Role | Technology |
+| :--- | :--- |
+| **Core** | React 19 + Vite |
+| **Styling** | Tailwind CSS 4 |
+| **Animation** | Framer Motion (`motion`), `ogl` (WebGL galaxy background) |
+| **Hosting** | Vercel |
+
+### ⚙️ Backend
+| Role | Technology |
+| :--- | :--- |
+| **Core** | Java 21 + Spring Boot |
+| **Auth** | Spring Security (JWT) + Google OAuth2 |
+| **Database** | MySQL + Spring Data JPA |
+| **Storage** | Local Filesystem (Paths referenced in the database) |
+| **Cron Jobs** | Scheduled Spring tasks for per-minute expiry cleanup |
+| **Ops** | Dockerized for seamless, reliable deployment |
