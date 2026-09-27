@@ -149,9 +149,9 @@ function App(){
         <div className="w-full">
           <Retrieval retrieveRef={retrieveRef} darkMode={darkMode} />
         </div>
-
-        <About darkMode={darkMode} aboutRef={aboutRef} />
       </main>
+
+      <About darkMode={darkMode} aboutRef={aboutRef} />
       <ScrollButton darkMode={darkMode} sendRef={sendRef} retrieveRef={retrieveRef} aboutRef={aboutRef} />
     {historyOpen && (
       <History darkMode={darkMode} onClose={() => setHistoryOpen(false)} />
