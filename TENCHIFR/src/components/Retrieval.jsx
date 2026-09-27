@@ -47,7 +47,7 @@ function Retrieval({ darkMode, retrieveRef }) {
         }
     }
     return (
-        <section ref={retrieveRef} id="retrieval-section" className="relative mt-[50vh] sm:mt-[65vh] lg:mt-[75vh] scroll-mt-24 sm:scroll-mt-28 mx-auto w-full max-w-[92vw] sm:max-w-125 mb-36 sm:mb-52">
+        <section ref={retrieveRef} id="retrieval-section" className="relative mt-[50vh] sm:mt-[65vh] lg:mt-[75vh] scroll-mt-24 sm:scroll-mt-28 mx-auto w-full max-w-[92vw] sm:max-w-125 mb-20 sm:mb-28">
             <div className={
                 darkMode
                     ? "w-full text-center rounded-xl border border-white/40 bg-white/10 py-2.5 px-4 text-lg sm:text-xl font-semibold text-white backdrop-blur-md mb-4 shadow-sm"

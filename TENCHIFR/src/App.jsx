@@ -16,6 +16,7 @@ import OAuth from "./auth/OAuth";
 import LightTheme from "./components/LightTheme";
 import History from "./components/History";
 import ProfileAvatar from "./components/ProfileAvatar";
+import About from "./components/About";
 import logo from "./assets/logo.png";
 
 
@@ -28,6 +29,7 @@ function App(){
   const [historyOpen, setHistoryOpen] = useState(false);
   const sendRef = useRef(null);
   const retrieveRef = useRef(null);
+  const aboutRef = useRef(null);
 
   const handleToggleTheme = (origin) => {
     const nextMode = !darkMode;
@@ -37,6 +39,20 @@ function App(){
       key: Date.now(),
     });
     setDarkMode(nextMode);
+  };
+
+  const handleScrollToAbout = () => {
+    if (aboutRef?.current) {
+      const navbarOffset = 96;
+      const targetY =
+        aboutRef.current.getBoundingClientRect().top +
+        window.pageYOffset -
+        navbarOffset;
+      window.scrollTo({
+        top: Math.max(0, targetY),
+        behavior: "smooth",
+      });
+    }
   };
 
   const isGalaxyActive = darkMode || themeTransition !== null;
@@ -93,6 +109,7 @@ function App(){
               darkMode={darkMode}
               setDarkMode={setDarkMode}
               onHistory={() => setHistoryOpen(true)}
+              onAbout={handleScrollToAbout}
             />
             <Theme darkMode={darkMode} setDarkMode={setDarkMode} onToggleTheme={handleToggleTheme} />
           </nav>
@@ -132,8 +149,10 @@ function App(){
         <div className="w-full">
           <Retrieval retrieveRef={retrieveRef} darkMode={darkMode} />
         </div>
+
+        <About darkMode={darkMode} aboutRef={aboutRef} />
       </main>
-    <ScrollButton darkMode={darkMode} sendRef={sendRef} retrieveRef={retrieveRef} />
+      <ScrollButton darkMode={darkMode} sendRef={sendRef} retrieveRef={retrieveRef} aboutRef={aboutRef} />
     {historyOpen && (
       <History darkMode={darkMode} onClose={() => setHistoryOpen(false)} />
     )}

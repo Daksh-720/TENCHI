@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import RubberSegment from "./RubberSegment";
-import { PackageOpen, Send as SendIcon } from "lucide-react";
+import { PackageOpen, Send as SendIcon, Info } from "lucide-react";
 
-function ScrollButton({ darkMode, sendRef, retrieveRef }) {
+function ScrollButton({ darkMode, sendRef, retrieveRef, aboutRef }) {
     const [selected, setSelected] = useState("Send");
 
     useEffect(() => {
@@ -13,9 +13,20 @@ function ScrollButton({ darkMode, sendRef, retrieveRef }) {
             ticking = true;
             requestAnimationFrame(() => {
                 ticking = false;
-                if (!retrieveRef?.current) return;
-                const rect = retrieveRef.current.getBoundingClientRect();
-                if (rect.top <= window.innerHeight * 0.5) {
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                const windowHeight = window.innerHeight;
+                const docHeight = document.documentElement.scrollHeight;
+
+                if (
+                    aboutRef?.current &&
+                    (windowHeight + scrollY >= docHeight - 150 ||
+                        aboutRef.current.getBoundingClientRect().top <= windowHeight * 0.45)
+                ) {
+                    setSelected("About");
+                } else if (
+                    retrieveRef?.current &&
+                    retrieveRef.current.getBoundingClientRect().top <= windowHeight * 0.5
+                ) {
                     setSelected("Retrieve");
                 } else {
                     setSelected("Send");
@@ -25,19 +36,29 @@ function ScrollButton({ darkMode, sendRef, retrieveRef }) {
 
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [retrieveRef]);
+    }, [retrieveRef, aboutRef]);
 
     function scrollToSection(value) {
         setSelected(value);
         if (value === "Send") {
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            if (sendRef?.current) {
+                const navbarOffset = 96;
+                const targetY =
+                    sendRef.current.getBoundingClientRect().top +
+                    window.pageYOffset -
+                    navbarOffset;
+                window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
+            } else {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
             return;
         }
 
-        if (retrieveRef?.current) {
+        const targetRef = value === "About" ? aboutRef : retrieveRef;
+        if (targetRef?.current) {
             const navbarOffset = 96;
             const targetY =
-                retrieveRef.current.getBoundingClientRect().top +
+                targetRef.current.getBoundingClientRect().top +
                 window.pageYOffset -
                 navbarOffset;
 
@@ -54,6 +75,7 @@ function ScrollButton({ darkMode, sendRef, retrieveRef }) {
                 items={[
                     { value: "Send", label: "SEND", icon: <SendIcon size={24} strokeWidth={1.5} /> },
                     { value: "Retrieve", label: "RETRIEVE", icon: <PackageOpen size={24} strokeWidth={1.5} /> },
+                    { value: "About", label: "ABOUT", icon: <Info size={24} strokeWidth={1.5} /> },
                 ]}
                 value={selected}
                 onChange={scrollToSection}
