@@ -10,6 +10,13 @@ function Retrieval({ darkMode, retrieveRef }) {
     const [error, setError] = useState("");
 
 
+    const handleKeyDown = (event) => {
+        // Check if the pressed key is "Enter"
+        if (event.key === 'Enter') {
+            handleRetrieve();
+        }
+    };
+
 
     function handleDownload(fileId = null){
         const code = shareCode.trim();
@@ -116,6 +123,7 @@ function Retrieval({ darkMode, retrieveRef }) {
                     placeholder="Code"
                     value={shareCode}
                     onChange={(e) => setShareCode(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     className={
                         darkMode
                             ? "h-12 w-full sm:flex-1 rounded-xl border border-white/20 bg-white/10 px-4 text-white outline-none placeholder:text-white/50 backdrop-blur-md"
@@ -126,6 +134,7 @@ function Retrieval({ darkMode, retrieveRef }) {
                 <button
                     type="button"
                     onClick={handleRetrieve}
+                    onKeyDown={handleKeyDown}
                     className={
                         darkMode
                             ? "h-12 w-full sm:w-auto rounded-xl border-2 border-[#00D2FF]/60 bg-[#A78BFA]/10 px-8 py-3 font-semibold text-white backdrop-blur-md transition hover:bg-[#737FF2]/40 hover:backdrop-blur-xl cursor-pointer"
