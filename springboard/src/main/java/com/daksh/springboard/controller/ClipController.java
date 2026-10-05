@@ -55,7 +55,13 @@ public class ClipController {
     }
 
     @GetMapping("/clips")
-    public ResponseEntity<List<GetClipResponse>> getAllClips(){
+    public ResponseEntity<?> getAllClips(
+            @RequestHeader(value = "X-Admin-Password", required = false) String headerPass,
+            @RequestParam(value = "adminPass", required = false) String queryPass){
+        String providedPass = headerPass != null ? headerPass : queryPass;
+        if (adminPassword == null || adminPassword.isBlank() || !adminPassword.equals(providedPass)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: Invalid or missing Admin Password!");
+        }
         List<GetClipResponse> responses = new ArrayList<>();
         for(Clip clip : clipService.getAllClips()){
             responses.add(mapToGetClipResponse(clip));
