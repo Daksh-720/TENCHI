@@ -9,12 +9,23 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Render Backend
+      - name: Ping Backend
+        env:
+          BACKEND_HEALTH_URL: ${{ secrets.BACKEND_HEALTH_URL || secrets.BACKEND_URL }}
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://tenchi-backend.onrender.com/health)
+          if [ -z "$BACKEND_HEALTH_URL" ]; then
+            echo "::warning::BACKEND_HEALTH_URL secret is not set. Please add BACKEND_HEALTH_URL in repo Secrets."
+            exit 0
+          fi
+          # Ensure /health endpoint is targeted if only base URL provided
+          URL="$BACKEND_HEALTH_URL"
+          if [[ "$URL" != *"/health" ]]; then
+            URL="${URL%/}/health"
+          fi
+          response=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
           echo "Health check status code: $response"
           if [ "$response" -eq 200 ]; then
-            echo "Render backend is awake and healthy!"
+            echo "Backend is awake and healthy!"
           else
             echo "Ping returned $response"
           fi

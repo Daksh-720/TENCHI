@@ -18,13 +18,30 @@ function Retrieval({ darkMode, retrieveRef }) {
     };
 
 
-    function handleDownload(fileId = null){
+    async function handleDownload(fileId = null, fileName = ""){
         const code = shareCode.trim();
         const url = fileId
               ? `${API_BASE_URL}/clips/${code}/files/${fileId}/download`
               : `${API_BASE_URL}/clips/${code}/download`;
 
-              window.open(url, "_blank");
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                const message = await response.text();
+                throw new Error(message || "Download failed");
+            }
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = fileName || (fileId ? `file_${fileId}` : `clip_${code}.zip`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (err) {
+            setError(err.message || "Failed to download file.");
+        }
     }
 
 
@@ -87,7 +104,7 @@ function Retrieval({ darkMode, retrieveRef }) {
                                 <span className="truncate mr-2">{file.fileName}</span>
 
                                 <button 
-                                       onClick={() => handleDownload(file.id)}
+                                       onClick={() => handleDownload(file.id, file.fileName)}
                                        className={darkMode
                                            ? "shrink-0 cursor-pointer rounded-lg border border-white/20 bg-white/10 px-3 py-1 text-xs sm:text-sm transition hover:bg-white/20"
                                            : "shrink-0 cursor-pointer rounded-lg border border-black/20 bg-black/5 px-3 py-1 text-xs sm:text-sm text-black transition hover:bg-black/10"}>
