@@ -28,7 +28,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
-    @Value("${app.frontend.url:http://localhost:5173}")
+    @Value("${app.frontend.url:https://tenchi-data.vercel.app}")
     private String frontendUrl;
 
     private final UserRepository userRepository;
