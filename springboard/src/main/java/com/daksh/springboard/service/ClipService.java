@@ -52,8 +52,8 @@ public class ClipService {
         if(expiryMinutes == null){
           expiryMinutes = 15;
         }
-        if(expiryMinutes < 1 || expiryMinutes > 2880){
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
+        if(expiryMinutes < 1 || expiryMinutes > 10080){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 7days");
         }
         clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
         clip.setShareCode(resolveShareCode(request.getShareCode()));
@@ -184,8 +184,8 @@ public class ClipService {
     if(expiryMinutes == null){
       expiryMinutes = 15;
     }
-    if(expiryMinutes<1 || expiryMinutes>2880){
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
+    if(expiryMinutes<1 || expiryMinutes>10080){
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 7days");
     }
     clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
     clip.setShareCode(resolveShareCode(shareCode));
@@ -210,8 +210,8 @@ public class ClipService {
     if(expiryMinutes == null){
       expiryMinutes = 15;
     }
-    if(expiryMinutes<1 || expiryMinutes>2880){
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 2days");
+    if(expiryMinutes<1 || expiryMinutes>10080){
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 7days");
     }
     clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
     clip.setShareCode(resolveShareCode(shareCode));
