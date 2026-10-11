@@ -3,24 +3,6 @@ import { useState } from "react";
 import { API_BASE_URL } from "../config";
 import { Copy, Check } from "lucide-react";
 
-const CHARACTERS = "abcxyz0123456789";
-
-function generateInstantCode() {
-    let result = "";
-    const cryptoObj = typeof window !== "undefined" && (window.crypto || window.msCrypto);
-    if (cryptoObj && cryptoObj.getRandomValues) {
-        const values = new Uint32Array(6);
-        cryptoObj.getRandomValues(values);
-        for (let i = 0; i < 6; i++) {
-            result += CHARACTERS.charAt(values[i] % CHARACTERS.length);
-        }
-    } else {
-        for (let i = 0; i < 6; i++) {
-            result += CHARACTERS.charAt(Math.floor(Math.random() * CHARACTERS.length));
-        }
-    }
-    return result;
-}
 
 function uploadWithProgress(url, formData, headers, onProgress) {
     return new Promise((resolve, reject) => {
@@ -111,9 +93,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 return;
             }
 
-            // INSTANT CODE GENERATION: runs in < 0.01ms so the user has the code right away
-            const instantCode = generateInstantCode();
-            setShareCode(instantCode);
+            setShareCode("");
             setLoading(true);
             setProgress(0);
 
@@ -126,8 +106,7 @@ function SendRet({ text, files, activeMode, darkMode }) {
                     },
                     body: JSON.stringify({
                         content: text,
-                        expiryMinutes: expiryMinutes,
-                        shareCode: instantCode
+                        expiryMinutes: expiryMinutes
                     })
                 });
 
@@ -153,7 +132,6 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 if (files.length === 1) {
                     formData.append("file", files[0]);
                     formData.append("expiryMinutes", expiryMinutes);
-                    formData.append("shareCode", instantCode);
 
                     const data = await uploadWithProgress(
                         `${API_BASE_URL}/file`,
@@ -171,7 +149,6 @@ function SendRet({ text, files, activeMode, darkMode }) {
                     });
 
                     formData.append("expiryMinutes", expiryMinutes);
-                    formData.append("shareCode", instantCode);
 
                     const data = await uploadWithProgress(
                         `${API_BASE_URL}/files`,
@@ -266,11 +243,6 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 </div>
             </div>
 
-            {loading && shareCode && (
-                <p className="text-xs text-cyan-400 font-medium animate-pulse">
-                    Code ready! Uploading in background...
-                </p>
-            )}
 
             {copied && (
                 <p className="text-xs text-emerald-400 font-medium animate-pulse">
