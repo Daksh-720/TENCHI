@@ -6,26 +6,15 @@ import java.util.List;
 import com.daksh.springboard.model.ContentType;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"id", "content"})
+@JsonPropertyOrder({"shareCode", "content"})
 public class GetClipResponse {
     
-    private Long id;
     private String content;
     private String shareCode;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
-    // private String fileName;
-    // private String filePath;
-    // private Long fileSize;
     private List<FileResponse> files;
     private ContentType contentType;
-
-    public Long getId(){
-        return id;
-    }
-    public void setId(Long id){
-        this.id = id;
-    }
 
     public String getContent(){
         return content;
@@ -41,7 +30,7 @@ public class GetClipResponse {
         this.shareCode = shareCode;
     }
 
-     public LocalDateTime getCreatedAt(){
+    public LocalDateTime getCreatedAt(){
         return createdAt;
     }
     public void setCreatedAt(LocalDateTime createdAt){

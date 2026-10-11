@@ -2,16 +2,8 @@ package com.daksh.springboard.dto;
 
 public class CreateClipResponse {
 
-    private Long id;
     private String shareCode;
     private String message;
-
-    public Long getId(){
-        return id;
-    }
-    public void setId(Long id){
-        this.id = id;
-    }
 
     public String getMessage(){
         return message;
@@ -27,8 +19,7 @@ public class CreateClipResponse {
         this.shareCode = shareCode;
     }
 
-    public CreateClipResponse(Long id, String shareCode, String message){
-        this.id = id;
+    public CreateClipResponse(String shareCode, String message){
         this.shareCode = shareCode;
         this.message = message;
     }

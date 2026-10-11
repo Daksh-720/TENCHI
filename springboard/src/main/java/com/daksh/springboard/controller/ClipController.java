@@ -47,7 +47,6 @@ public class ClipController {
                                                          @AuthenticationPrincipal User user){
         Clip clip = clipService.createClip(request, user);
         CreateClipResponse response = new CreateClipResponse(
-            clip.getId(),
             clip.getShareCode(),
             "Clip Created Successfully!!"
         );
@@ -111,7 +110,6 @@ public class ClipController {
 
     private GetClipResponse mapToGetClipResponse(Clip clip){
         GetClipResponse response = new GetClipResponse();
-        response.setId(clip.getId());
         response.setShareCode(clip.getShareCode());
         response.setContent(clip.getContent());
         response.setContentType(clip.getContentType());
@@ -134,7 +132,7 @@ public class ClipController {
                                                          @RequestParam(required = false) String shareCode,
                                                          @AuthenticationPrincipal User user){
         Clip clip = clipService.createFileClip(file, expiryMinutes, shareCode, user);
-        CreateClipResponse response = new CreateClipResponse(clip.getId(), clip.getShareCode(), "File uploaded Successfully!!");
+        CreateClipResponse response = new CreateClipResponse(clip.getShareCode(), "File uploaded Successfully!!");
         return ResponseEntity.ok(response);
     }
 
@@ -145,7 +143,7 @@ public class ClipController {
                                                                   @RequestParam(required = false) String shareCode,
                                                                   @AuthenticationPrincipal User user){
         Clip clip = clipService.createMultipleFileClip(files, expiryMinutes, shareCode, user);
-        CreateClipResponse response = new CreateClipResponse(clip.getId(), clip.getShareCode(), "File uploaded Successfully!!");
+        CreateClipResponse response = new CreateClipResponse(clip.getShareCode(), "File uploaded Successfully!!");
         return ResponseEntity.ok(response);
     }
 

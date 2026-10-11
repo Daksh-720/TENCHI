@@ -54,7 +54,7 @@ function History({ darkMode, onClose }) {
                 <div className="space-y-3">
                     {clips.map((clip) => (
                         <article
-                            key={clip.id}
+                            key={clip.shareCode}
                             className={darkMode
                                 ? "rounded-xl border border-white/15 bg-white/10 p-4"
                                 : "rounded-xl border border-black/15 bg-black/5 p-4"}
