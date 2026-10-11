@@ -87,9 +87,12 @@ public class ClipController {
     }
 
 
-    @PutMapping("/clips/{id}")
-    public ResponseEntity<GetClipResponse> updateClip(@PathVariable Long id, @RequestBody UpdateClipRequest request){
-        Clip clip = clipService.updateClip(id, request);
+    @PutMapping("/clips/{shareCode}")
+    public ResponseEntity<GetClipResponse> updateClip(
+            @PathVariable String shareCode, 
+            @RequestBody UpdateClipRequest request,
+            @AuthenticationPrincipal User user){
+        Clip clip = clipService.updateClip(shareCode, request, user);
         return ResponseEntity.ok(mapToGetClipResponse(clip));
     }
 

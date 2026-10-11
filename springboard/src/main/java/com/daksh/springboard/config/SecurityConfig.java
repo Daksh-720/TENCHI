@@ -48,6 +48,7 @@ public class SecurityConfig {
         .requestMatchers("/", "/health", "/ping").permitAll()
         .requestMatchers("/auth/**").permitAll()
         .requestMatchers("/clips/history").authenticated()
+        .requestMatchers(HttpMethod.PUT, "/clips/**").authenticated()
         .requestMatchers("/clips", "/clips/**").permitAll()
         .requestMatchers("/file", "/files", "/file/**", "/files/**").permitAll()
         .requestMatchers("/error").permitAll()

@@ -88,11 +88,14 @@ public class ClipService {
   
 
 
-  public Clip updateClip(Long id, UpdateClipRequest request){
-     Clip clip = getClipById(id);
+  public Clip updateClip(String shareCode, UpdateClipRequest request, User user){
+     Clip clip = getClipByShareCode(shareCode);
+     if(clip.getOwner() == null || user == null || !clip.getOwner().getId().equals(user.getId())){
+         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update this clip!");
+     }
      clip.setContent(request.getContent());
      return clipRepository.save(clip);
-    }
+  }
 
 
   public void deleteClip(Long id){
