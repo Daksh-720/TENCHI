@@ -155,8 +155,15 @@ public class ClipController {
     public ResponseEntity<Resource> download(@PathVariable String shareCode){
         Clip clip = clipService.getClipByShareCode(shareCode);
         Resource resource = clipService.getFile(clip);
+        String fileName = clip.getFileName();
+        if ((fileName == null || fileName.isBlank()) && !clip.getFiles().isEmpty()) {
+            fileName = clip.getFiles().get(0).getFileName();
+        }
+        if (fileName == null || fileName.isBlank()) {
+            fileName = "download";
+        }
         return ResponseEntity.ok()
-                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + clip.getFileName() + "\"")
+                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                              .body(resource);
     }
 
@@ -169,7 +176,7 @@ public class ClipController {
                             .stream()
                             .filter(f -> f.getId().equals(fileId))
                             .findFirst()
-                            .orElseThrow();
+                            .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "File not found with ID: " + fileId));
                         
         return ResponseEntity.ok()
                              .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")

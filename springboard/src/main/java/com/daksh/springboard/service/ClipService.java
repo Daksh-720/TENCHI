@@ -15,11 +15,8 @@ import com.daksh.springboard.util.CodeGenerator;
 import com.daksh.springboard.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.FileSystemResource;
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.nio.file.*;
+import java.util.List;
 
 
 @Service
@@ -27,12 +24,12 @@ public class ClipService {
 
     private final ClipRepository clipRepository;
     private final CodeGenerator codeGenerator;
-    
-    
-    
-    public ClipService(ClipRepository clipRepository, CodeGenerator codeGenerator){
+    private final StorageService storageService;
+
+    public ClipService(ClipRepository clipRepository, CodeGenerator codeGenerator, StorageService storageService){
       this.clipRepository = clipRepository;
       this.codeGenerator = codeGenerator;
+      this.storageService = storageService;
     }
 
 
@@ -99,7 +96,13 @@ public class ClipService {
 
 
   public void deleteClip(Long id){
-    clipRepository.deleteById(getClipById(id).getId());
+    Clip clip = getClipById(id);
+    if (clip.getFiles() != null) {
+      for (clipFile file : clip.getFiles()) {
+        storageService.deleteFile(file.getFilePath());
+      }
+    }
+    clipRepository.deleteById(clip.getId());
   }
 
   public Clip getClipByShareCode(String shareCode){
@@ -117,8 +120,7 @@ public class ClipService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File Not Found");
     }
     clipFile file = clip.getFiles().get(0);
-    Path filePath = Paths.get(file.getFilePath());
-    return new FileSystemResource(filePath);
+    return storageService.getFile(file.getFilePath());
   }
 
 
@@ -129,36 +131,12 @@ public class ClipService {
                         .findFirst()
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "FILE NOT FOUND!"));
 
-    
-    Path filePath = Paths.get(file.getFilePath());
-    Resource resource = new FileSystemResource(filePath);
-    if(!resource.exists()){
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "FILE NOT FOUND!");
-    }
-    return resource;
+    return storageService.getFile(file.getFilePath());
   }
   
 
   public FileInfo saveFile(MultipartFile file){
-    try{
-      Path uploadPath = Paths.get("uploads");
-      String originalFileName = file.getOriginalFilename();
-      String extension = "";
-      if(originalFileName != null && originalFileName.contains(".")){
-        extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-      }
-      String storedFileName = UUID.randomUUID() + extension;
-      Path filePath = uploadPath.resolve(storedFileName);
-      if(!Files.exists(uploadPath)){
-        Files.createDirectories(uploadPath);
-      }
-      Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-      long fileSize = Files.size(filePath);
-      return new FileInfo(originalFileName,filePath.toString(),fileSize);
-
-    }catch(IOException e){
-      throw new RuntimeException("Failed to Create upload Directory", e);
-    }
+    return storageService.upload(file);
   }
 
 

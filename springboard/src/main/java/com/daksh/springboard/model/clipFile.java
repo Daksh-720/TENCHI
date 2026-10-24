@@ -27,7 +27,7 @@ public class clipFile {
     public Long getId(){
         return id;
     }
-    public void setFIleName(Long id){
+    public void setId(Long id){
         this.id = id;
     }
 

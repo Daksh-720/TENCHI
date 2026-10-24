@@ -8,6 +8,7 @@ import com.daksh.springboard.entity.User;
 
 public interface ClipRepository extends JpaRepository<Clip, Long>{
     Optional<Clip> findByShareCode(String shareCode);
+    List<Clip> findByExpiresAtBefore(LocalDateTime time);
     void deleteByExpiresAtBefore(LocalDateTime time);
     
     List<Clip> findByExpiresAtAfter(LocalDateTime time);
