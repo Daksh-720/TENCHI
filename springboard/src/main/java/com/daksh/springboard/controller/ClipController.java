@@ -168,7 +168,7 @@ public class ClipController {
     }
 
 
-    @GetMapping("/clips/{shareCode}/files/{fileId}/download")
+    @GetMapping(value = "/clips/{shareCode}/files/{fileId}/download", produces = "application/octet-stream")
     public ResponseEntity<Resource> downloadFile(@PathVariable String shareCode, @PathVariable Long fileId){
         Clip clip = clipService.getClipByShareCode(shareCode);
         Resource resource = clipService.getFileById(clip, fileId);
