@@ -27,6 +27,10 @@ import com.daksh.springboard.service.ClipService;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ContentDisposition;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -162,24 +166,36 @@ public class ClipController {
         if (fileName == null || fileName.isBlank()) {
             fileName = "download";
         }
+        String cleanFileName = Paths.get(fileName).getFileName().toString();
+        ContentDisposition contentDisposition = ContentDisposition.attachment()
+                .filename(cleanFileName, StandardCharsets.UTF_8)
+                .build();
+
         return ResponseEntity.ok()
-                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                             .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
+                             .contentType(MediaType.APPLICATION_OCTET_STREAM)
                              .body(resource);
     }
 
 
-    @GetMapping(value = "/clips/{shareCode}/files/{fileId}/download", produces = "application/octet-stream")
+    @GetMapping("/clips/{shareCode}/files/{fileId}/download")
     public ResponseEntity<Resource> downloadFile(@PathVariable String shareCode, @PathVariable Long fileId){
         Clip clip = clipService.getClipByShareCode(shareCode);
-        Resource resource = clipService.getFileById(clip, fileId);
         clipFile file = clip.getFiles()
                             .stream()
                             .filter(f -> f.getId().equals(fileId))
                             .findFirst()
                             .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "File not found with ID: " + fileId));
-                        
+        Resource resource = clipService.getFileById(clip, fileId);
+
+        String cleanFileName = Paths.get(file.getFileName()).getFileName().toString();
+        ContentDisposition contentDisposition = ContentDisposition.attachment()
+                .filename(cleanFileName, StandardCharsets.UTF_8)
+                .build();
+
         return ResponseEntity.ok()
-                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                             .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
+                             .contentType(MediaType.APPLICATION_OCTET_STREAM)
                              .body(resource);
     }
 

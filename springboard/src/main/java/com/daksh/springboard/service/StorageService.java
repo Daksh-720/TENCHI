@@ -103,16 +103,19 @@ public class StorageService {
                 throw new RuntimeException("Failed to upload file to Cloud Storage: " + e.getMessage(), e);
             }
         } else {
-            // Local fallback
+            // Local fallback (use absolute path and Files.copy to prevent Tomcat relative path FileNotFoundException on Linux)
             try {
-                Path uploadPath = Paths.get("uploads");
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
+                Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();
+                if (!Files.exists(uploadDir)) {
+                    Files.createDirectories(uploadDir);
                 }
-                Path filePath = uploadPath.resolve(storedKey.replace("uploads/", ""));
-                file.transferTo(filePath.toFile());
-                return new FileInfo(originalFileName, filePath.toString(), fileSize);
+                String pureFileName = storedKey.startsWith("uploads/") ? storedKey.substring("uploads/".length()) : storedKey;
+                Path destinationPath = uploadDir.resolve(pureFileName);
+                Files.copy(file.getInputStream(), destinationPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                log.info("File stored locally: {}", destinationPath);
+                return new FileInfo(originalFileName, destinationPath.toString(), fileSize);
             } catch (IOException e) {
+                log.error("Failed to store file locally: {}", e.getMessage(), e);
                 throw new RuntimeException("Failed to store file locally: " + e.getMessage(), e);
             }
         }
@@ -121,7 +124,7 @@ public class StorageService {
     public Resource getFile(String storedKey) {
         // 1. Check if it exists locally on disk (backward compatibility)
         if (storedKey != null) {
-            Path localPath = Paths.get(storedKey);
+            Path localPath = Paths.get(storedKey).toAbsolutePath().normalize();
             if (Files.exists(localPath)) {
                 return new FileSystemResource(localPath);
             }
@@ -135,8 +138,14 @@ public class StorageService {
                         .key(storedKey)
                         .build();
 
-                InputStream s3Stream = s3Client.getObject(getRequest);
-                return new InputStreamResource(s3Stream);
+                software.amazon.awssdk.core.ResponseInputStream<software.amazon.awssdk.services.s3.model.GetObjectResponse> s3Stream = s3Client.getObject(getRequest);
+                long contentLength = s3Stream.response().contentLength();
+                return new InputStreamResource(s3Stream) {
+                    @Override
+                    public long contentLength() {
+                        return contentLength;
+                    }
+                };
             } catch (Exception e) {
                 log.error("Failed to retrieve file from Backblaze B2 [{}]: {}", storedKey, e.getMessage());
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found in storage: " + e.getMessage());
