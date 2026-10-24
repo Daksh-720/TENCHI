@@ -66,6 +66,7 @@ public class StorageService {
                         ))
                         .serviceConfiguration(S3Configuration.builder()
                                 .pathStyleAccessEnabled(true)
+                                .chunkedEncodingEnabled(false)
                                 .build())
                         .build();
                 log.info("Backblaze B2 S3 Client successfully initialized for bucket: {}", bucketName);
