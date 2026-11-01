@@ -55,6 +55,32 @@ function uploadWithProgress(url, formData, headers, onProgress) {
     });
 }
 
+function uploadDirectToB2(url, file, onProgress) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", url);
+        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+
+        if (xhr.upload && onProgress) {
+            xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable && e.total > 0) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    onProgress(percent);
+                }
+            };
+        }
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve();
+            } else {
+                reject(new Error(`Direct cloud upload failed (${xhr.status})`));
+            }
+        };
+        xhr.onerror = () => reject(new Error("Network connection error during cloud upload."));
+        xhr.send(file);
+    });
+}
+
 function SendRet({ text, files, activeMode, darkMode }) {
     const [expiryTime, setExpiryTime] = useState("15");
     const [expiryUnit, setExpiryUnit] = useState("minutes");
@@ -148,40 +174,93 @@ function SendRet({ text, files, activeMode, darkMode }) {
                 activeMode === "image" ||
                 activeMode === "video"
             ) {
-                const formData = new FormData();
+                let presignSucceeded = false;
 
-                if (files.length === 1) {
-                    formData.append("file", files[0]);
-                    formData.append("expiryMinutes", expiryMinutes);
-                    formData.append("shareCode", instantCode);
+                // 1. Try Direct Presigned Cloud Upload (Super fast, skips Render proxy)
+                try {
+                    const filePayload = files.map((f) => ({
+                        fileName: f.name,
+                        fileSize: f.size,
+                        contentType: f.type || "application/octet-stream"
+                    }));
 
-                    const data = await uploadWithProgress(
-                        `${API_BASE_URL}/file`,
-                        formData,
-                        authorization,
-                        (p) => setProgress(p)
-                    );
-
-                    if (data.shareCode) {
-                        setShareCode(data.shareCode);
-                    }
-                } else {
-                    files.forEach((file) => {
-                        formData.append("files", file);
+                    const presignRes = await fetch(`${API_BASE_URL}/file/presign`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            ...authorization
+                        },
+                        body: JSON.stringify({
+                            files: filePayload,
+                            expiryMinutes: expiryMinutes,
+                            shareCode: instantCode
+                        })
                     });
 
-                    formData.append("expiryMinutes", expiryMinutes);
-                    formData.append("shareCode", instantCode);
+                    if (presignRes.ok) {
+                        const presignData = await presignRes.json();
+                        if (presignData && presignData.files && presignData.files.length > 0) {
+                            const totalBytes = files.reduce((acc, f) => acc + (f.size || 1), 0);
+                            const loadedMap = new Map();
 
-                    const data = await uploadWithProgress(
-                        `${API_BASE_URL}/files`,
-                        formData,
-                        authorization,
-                        (p) => setProgress(p)
-                    );
+                            await Promise.all(
+                                presignData.files.map((item, idx) => {
+                                    const fileObj = files[idx];
+                                    return uploadDirectToB2(item.uploadUrl, fileObj, (percent) => {
+                                        loadedMap.set(idx, (percent / 100) * fileObj.size);
+                                        let currentLoaded = 0;
+                                        loadedMap.forEach((v) => { currentLoaded += v; });
+                                        const overall = Math.min(100, Math.round((currentLoaded / totalBytes) * 100));
+                                        setProgress(overall);
+                                    });
+                                })
+                            );
 
-                    if (data.shareCode) {
-                        setShareCode(data.shareCode);
+                            setShareCode(presignData.shareCode || instantCode);
+                            presignSucceeded = true;
+                        }
+                    }
+                } catch (presignErr) {
+                    console.warn("Direct upload fallback to proxy:", presignErr);
+                }
+
+                // 2. Fallback to standard proxy upload if presign was unavailable
+                if (!presignSucceeded) {
+                    const formData = new FormData();
+
+                    if (files.length === 1) {
+                        formData.append("file", files[0]);
+                        formData.append("expiryMinutes", expiryMinutes);
+                        formData.append("shareCode", instantCode);
+
+                        const data = await uploadWithProgress(
+                            `${API_BASE_URL}/file`,
+                            formData,
+                            authorization,
+                            (p) => setProgress(p)
+                        );
+
+                        if (data.shareCode) {
+                            setShareCode(data.shareCode);
+                        }
+                    } else {
+                        files.forEach((file) => {
+                            formData.append("files", file);
+                        });
+
+                        formData.append("expiryMinutes", expiryMinutes);
+                        formData.append("shareCode", instantCode);
+
+                        const data = await uploadWithProgress(
+                            `${API_BASE_URL}/files`,
+                            formData,
+                            authorization,
+                            (p) => setProgress(p)
+                        );
+
+                        if (data.shareCode) {
+                            setShareCode(data.shareCode);
+                        }
                     }
                 }
             } 

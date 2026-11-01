@@ -1,7 +1,7 @@
 package com.daksh.springboard.service;
 
 import java.io.IOException;
-import java.io.InputStream;
+//import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,6 +32,11 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.time.Duration;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
+
 @Service
 public class StorageService {
 
@@ -53,6 +58,7 @@ public class StorageService {
     private String secretKey;
 
     private S3Client s3Client;
+    private S3Presigner s3Presigner;
 
     @PostConstruct
     public void init() {
@@ -69,12 +75,48 @@ public class StorageService {
                                 .chunkedEncodingEnabled(false)
                                 .build())
                         .build();
-                log.info("Backblaze B2 S3 Client successfully initialized for bucket: {}", bucketName);
+
+                this.s3Presigner = S3Presigner.builder()
+                        .endpointOverride(URI.create(endpoint))
+                        .region(Region.of(region))
+                        .credentialsProvider(StaticCredentialsProvider.create(
+                                AwsBasicCredentials.create(accessKey, secretKey)
+                        ))
+                        .serviceConfiguration(S3Configuration.builder()
+                                .pathStyleAccessEnabled(true)
+                                .build())
+                        .build();
+
+                log.info("Backblaze B2 S3 Client and Presigner successfully initialized for bucket: {}", bucketName);
             } catch (Exception e) {
-                log.error("Failed to initialize Backblaze B2 S3 Client: {}", e.getMessage(), e);
+                log.error("Failed to initialize Backblaze B2 S3 Client/Presigner: {}", e.getMessage(), e);
             }
         } else {
             log.warn("Backblaze B2 credentials not fully provided. Falling back to local disk storage if necessary.");
+        }
+    }
+
+    public String generatePresignedUploadUrl(String storedKey, String contentType) {
+        if (s3Presigner == null || bucketName == null || bucketName.isBlank()) {
+            return null;
+        }
+        try {
+            PutObjectRequest putRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(storedKey)
+                    .contentType(contentType != null && !contentType.isBlank() ? contentType : "application/octet-stream")
+                    .build();
+
+            PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(20))
+                    .putObjectRequest(putRequest)
+                    .build();
+
+            PresignedPutObjectRequest presigned = s3Presigner.presignPutObject(presignRequest);
+            return presigned.url().toString();
+        } catch (Exception e) {
+            log.error("Failed to generate presigned upload URL for [{}]: {}", storedKey, e.getMessage(), e);
+            return null;
         }
     }
 

@@ -7,6 +7,8 @@ import org.springframework.web.server.ResponseStatusException;
 import com.daksh.springboard.dto.CreateClipRequest;
 import com.daksh.springboard.dto.FileInfo;
 import com.daksh.springboard.dto.UpdateClipRequest;
+import com.daksh.springboard.dto.PresignFileRequest;
+import com.daksh.springboard.dto.PresignFileResponse;
 import com.daksh.springboard.model.Clip;
 import com.daksh.springboard.model.ContentType;
 import com.daksh.springboard.model.clipFile;
@@ -17,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.UUID;
 
 
 @Service
@@ -222,5 +226,78 @@ public class ClipService {
       return ContentType.VIDEO;
     }
     return ContentType.FILE;
+  }
+
+  private ContentType getContentTypeFromString(String contentType) {
+    if (contentType == null) {
+      return ContentType.FILE;
+    }
+    if (contentType.startsWith("image/")) {
+      return ContentType.IMAGE;
+    }
+    if (contentType.startsWith("video/")) {
+      return ContentType.VIDEO;
+    }
+    return ContentType.FILE;
+  }
+
+  public PresignFileResponse createPresignedClip(PresignFileRequest request, User owner) {
+    if (request == null || request.getFiles() == null || request.getFiles().isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No files specified for presigning");
+    }
+
+    Clip clip = new Clip();
+    clip.setOwner(owner);
+
+    LocalDateTime createdAt = LocalDateTime.now();
+    clip.setCreatedAt(createdAt);
+    Integer expiryMinutes = request.getExpiryMinutes();
+    if (expiryMinutes == null || expiryMinutes <= 0) {
+      expiryMinutes = 15;
+    }
+    if (expiryMinutes < 1 || expiryMinutes > 10080) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiry must be between 1min or 7days");
+    }
+    clip.setExpiresAt(createdAt.plusMinutes(expiryMinutes));
+    clip.setShareCode(resolveShareCode(request.getShareCode()));
+
+    List<PresignFileResponse.PresignedFileItem> items = new ArrayList<>();
+    boolean isSingle = request.getFiles().size() == 1;
+
+    for (PresignFileRequest.PresignFileItem fileItem : request.getFiles()) {
+      String fileName = fileItem.getFileName();
+      String extension = "";
+      if (fileName != null && fileName.contains(".")) {
+        extension = fileName.substring(fileName.lastIndexOf("."));
+      }
+      String storedKey = "uploads/" + UUID.randomUUID() + extension;
+      String uploadUrl = storageService.generatePresignedUploadUrl(storedKey, fileItem.getContentType());
+      if (uploadUrl == null) {
+        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Cloud storage presigning is unavailable. Please verify Backblaze B2 credentials.");
+      }
+
+      ContentType ct = getContentTypeFromString(fileItem.getContentType());
+      if (isSingle) {
+        clip.setContentType(ct);
+        clip.setFileName(fileName);
+        clip.setFilePath(storedKey);
+        clip.setFileSize(fileItem.getFileSize());
+      } else {
+        clip.setContentType(ContentType.FILE);
+      }
+
+      clipFile cf = new clipFile();
+      cf.setFileName(fileName);
+      cf.setFilePath(storedKey);
+      cf.setFileSize(fileItem.getFileSize());
+      cf.setContentType(ct);
+      cf.setClip(clip);
+      clip.getFiles().add(cf);
+
+      items.add(new PresignFileResponse.PresignedFileItem(fileName, uploadUrl, storedKey));
+    }
+
+    clipRepository.save(clip);
+    return new PresignFileResponse(clip.getShareCode(), items);
   }
 }

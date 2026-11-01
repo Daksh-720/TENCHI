@@ -21,6 +21,8 @@ import com.daksh.springboard.dto.CreateClipResponse;
 import com.daksh.springboard.dto.FileResponse;
 import com.daksh.springboard.dto.GetClipResponse;
 import com.daksh.springboard.dto.UpdateClipRequest;
+import com.daksh.springboard.dto.PresignFileRequest;
+import com.daksh.springboard.dto.PresignFileResponse;
 import com.daksh.springboard.model.Clip;
 import com.daksh.springboard.model.clipFile;
 import com.daksh.springboard.service.ClipService;
@@ -151,6 +153,14 @@ public class ClipController {
                                                                   @AuthenticationPrincipal User user){
         Clip clip = clipService.createMultipleFileClip(files, expiryMinutes, shareCode, user);
         CreateClipResponse response = new CreateClipResponse(clip.getShareCode(), "File uploaded Successfully!!");
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PostMapping("/file/presign")
+    public ResponseEntity<PresignFileResponse> presignUpload(@RequestBody PresignFileRequest request,
+                                                             @AuthenticationPrincipal User user){
+        PresignFileResponse response = clipService.createPresignedClip(request, user);
         return ResponseEntity.ok(response);
     }
 
