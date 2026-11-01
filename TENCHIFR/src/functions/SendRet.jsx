@@ -56,7 +56,7 @@ function uploadWithProgress(url, formData, headers, onProgress) {
 }
 
 function SendRet({ text, files, activeMode, darkMode }) {
-    const [expiryTime, setExpiryTime] = useState("");
+    const [expiryTime, setExpiryTime] = useState("15");
     const [expiryUnit, setExpiryUnit] = useState("minutes");
     const [shareCode, setShareCode] = useState("");
     const [error, setError] = useState("");
